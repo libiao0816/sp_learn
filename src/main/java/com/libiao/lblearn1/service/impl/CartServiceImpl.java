@@ -8,10 +8,12 @@ import com.libiao.lblearn1.domain.dto.cart.CartPageDTO;
 import com.libiao.lblearn1.domain.po.Cart;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
 import com.libiao.lblearn1.mapper.CartMapper;
+import com.libiao.lblearn1.security.LoginUser;
 import com.libiao.lblearn1.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +42,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
     public int removeCart(List<Long> ids) {
         int result = 0;
         try {
-            result = cartMapper.deleteBatchIds(ids);
+            result = cartMapper.deleteByIds(ids);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -49,9 +51,12 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
 
     @Override
     public PageResult<CartPageVO> getCartPage(CartPageDTO cartPageDTO) {
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Page<CartPageVO> page = cartMapper.getCartPage(
                 new Page<>(cartPageDTO.getPageNum(), cartPageDTO.getPageSize()),
-                cartPageDTO
+                cartPageDTO,
+                loginUser.getId()
         );
         return new PageResult<>(page.getTotal(), page.getRecords());
     }

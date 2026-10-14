@@ -10,10 +10,12 @@ import com.libiao.lblearn1.domain.po.Order;
 import com.libiao.lblearn1.domain.po.OrderItem;
 import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
 import com.libiao.lblearn1.mapper.OrderMapper;
+import com.libiao.lblearn1.security.LoginUser;
 import com.libiao.lblearn1.service.OrderItemService;
 import com.libiao.lblearn1.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -39,10 +41,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public PageResult<OrderPageVO> selectPage(OrderPageDTO orderPageDTO) {
+        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         Page<Order> orderPage = lambdaQuery()
                 .select(Order::getId)
+                .eq(Order::getUserId, loginUser.getId())
                 .eq(Objects.nonNull(orderPageDTO.getOrderId()), Order::getId, orderPageDTO.getOrderId())
-                .eq(Objects.nonNull(orderPageDTO.getUserId()), Order::getUserId, orderPageDTO.getUserId())
                 .eq(Objects.nonNull(orderPageDTO.getStatus()), Order::getStatus, orderPageDTO.getStatus())
                 .orderBy(orderPageDTO.getCreateTimeOrderBy() != null,
                         Objects.equals(orderPageDTO.getCreateTimeOrderBy(), (short) 1),
