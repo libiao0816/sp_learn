@@ -58,7 +58,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 List<String> whiteList = authProperties.getWhiteList();
                 // 如果是 refresh token，且当前请求不是 /auth/refresh → 拒绝
-                String tokenType = claims.get("type", String.class);
+                String tokenType = claims.get("tokenType", String.class);
                 if (TokenTypeEnum.REFRESH_TOKEN.getType().equals(tokenType)
                         && !whiteList.contains(request.getRequestURI())) {
                     filterChain.doFilter(request, response); // 走 401 return ;

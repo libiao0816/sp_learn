@@ -29,6 +29,7 @@ public class SecurityConfig {
 
     private final AuthProperties authProperties;
 
+    // 配置安全过滤链
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPointImpl entryPoint,
                                            AccessDeniedHandlerImpl deniedHandler)
@@ -50,12 +51,17 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // ---------- 白名单：不需要登录就能访问 ----------
                         .requestMatchers(authProperties.getWhiteList().toArray(String[]::new)).permitAll()
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // ★CORS 预检请求要放行
+                        // ★CORS 预检请求要放行
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
+                         // 接口文档
                         .requestMatchers("/doc.html", "/webjars/**",
-                                "/swagger-ui/**", "/v3/api-docs/**").permitAll() // 接口文档
-                        .requestMatchers("/actuator/health").permitAll() // 健康检查
-                        .requestMatchers("/error").permitAll() // ★强烈建议放行，否则出错时会变成 403/401
-                        .requestMatchers("/static/**", "/favicon.ico").permitAll() // 静态资源
+                                "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        // 健康检查
+                        .requestMatchers("/actuator/health").permitAll() 
+                         // 错误处理 ★强烈建议放行，否则出错时会变成 403/401
+                        .requestMatchers("/error").permitAll()
+                        // 静态资源
+                        .requestMatchers("/static/**", "/favicon.ico").permitAll()
 
                         // ---------- 需要角色/权限 ----------
                         .requestMatchers("/cart/**").hasRole("admin") // 等价 hasAuthority("ROLE_ADMIN")
@@ -64,6 +70,7 @@ public class SecurityConfig {
                         // ---------- 兜底：其余全部要登录 ----------
                         .anyRequest().authenticated()) // 现在开始收紧了：其余都要认证
 
+                // 配置异常处理
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(entryPoint)     // 401
                         .accessDeniedHandler(deniedHandler))      // 403
@@ -72,6 +79,7 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // 配置密码编码器
     @Bean
     public PasswordEncoder passwordEncoder() {
         // DelegatingPasswordEncoder：加密结果带算法前缀 {bcrypt}$2a$10$...
@@ -79,6 +87,7 @@ public class SecurityConfig {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
+    // 配置认证管理器
     /** 暴露 AuthenticationManager，才能在 Controller 里注入使用 */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config)

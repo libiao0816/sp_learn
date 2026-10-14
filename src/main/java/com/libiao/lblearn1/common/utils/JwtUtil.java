@@ -1,5 +1,6 @@
 package com.libiao.lblearn1.common.utils;
 
+import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.domain.po.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -38,12 +39,26 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String createToken(User user,String secret,Long ttl,List<String> userRoles,String type) {
+    /**
+     * 签发访问令牌：短有效期，用于每次业务请求的鉴权
+     */
+    public static String createAccessToken(User user, String secret, Long ttl, List<String> userRoles) {
+        return buildToken(user, secret, ttl, userRoles, TokenTypeEnum.ACCESS_TOKEN.getType());
+    }
+
+    /**
+     * 签发刷新令牌：长有效期，只用于换取新的访问令牌
+     */
+    public static String createRefreshToken(User user, String secret, Long ttl, List<String> userRoles) {
+        return buildToken(user, secret, ttl, userRoles, TokenTypeEnum.REFRESH_TOKEN.getType());
+    }
+
+    private static String buildToken(User user, String secret, Long ttl, List<String> userRoles, String type) {
         return Jwts.builder().subject(user.getId().toString())
                 .id(UUID.randomUUID().toString())
                 .claim("username", user.getUsername())
                 .claim("roles", userRoles)
-                .claim("tokenType",type)
+                .claim("tokenType", type)
                 .issuedAt(new Date()) // 签发时间
                 .expiration(new Date(System.currentTimeMillis() + ttl)) // 过期时间
                 .signWith(getKey(secret))
