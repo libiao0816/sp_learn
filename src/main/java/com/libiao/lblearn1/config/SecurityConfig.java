@@ -60,12 +60,12 @@ public class SecurityConfig {
                         .requestMatchers("/actuator/health").permitAll() 
                          // 错误处理 ★强烈建议放行，否则出错时会变成 403/401
                         .requestMatchers("/error").permitAll()
-                        // 静态资源
-                        .requestMatchers("/static/**", "/favicon.ico").permitAll()
+                        // 静态资源 (商品封面图存放在 classpath:/static/images/ 下, 对外路径为 /images/**)
+                        .requestMatchers("/images/**", "/static/**", "/favicon.ico").permitAll()
 
                         // ---------- 需要角色/权限 ----------
-                        .requestMatchers("/cart/**").hasRole("admin") // 等价 hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("user:delete")
+//                        .requestMatchers("/cart/**").hasRole("admin") // 等价 hasAuthority("ROLE_ADMIN")
+//                        .requestMatchers(HttpMethod.DELETE, "/users/**").hasAuthority("user:delete")
 
                         // ---------- 兜底：其余全部要登录 ----------
                         .anyRequest().authenticated()) // 现在开始收紧了：其余都要认证

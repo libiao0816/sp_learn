@@ -21,7 +21,6 @@ public class ProductController {
 
     @PostMapping("/getDetailById")
     @Operation(summary = "根据商品id查询商品详情", description = "根据商品id查询商品详情")
-    @PreAuthorize("hasRole('ADMIN')")
     public Result<Product> getDetailById(@RequestParam Long id) {
         return Result.Success(productService.selectDetailById(id));
     }
