@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.libiao</groupId>
+        <artifactId>lb-learn1</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>lb-learn1-api</artifactId>
+    <name>lb-learn1-api</name>
+    <description>对外 DTO / VO（含校验注解与 swagger 文档注解）</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-common</artifactId>
+        </dependency>
+
+        <!-- OrderPageVO 里引用了 OrderItem 实体 -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-domain</artifactId>
+        </dependency>
+
+        <!-- DTO 上的 @NotBlank / @NotNull；原来是随 knife4j 间接传递的，这里显式声明 -->
+        <dependency>
+            <groupId>jakarta.validation</groupId>
+            <artifactId>jakarta.validation-api</artifactId>
+        </dependency>
+
+        <!-- swagger 注解本体随 common 传递进来 -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

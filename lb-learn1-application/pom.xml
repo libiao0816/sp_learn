@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.libiao</groupId>
+        <artifactId>lb-learn1</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>lb-learn1-application</artifactId>
+    <name>lb-learn1-application</name>
+    <description>应用服务：service 接口与实现、用例编排</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-domain</artifactId>
+        </dependency>
+        <!-- 直接依赖 Mapper（本项目未抽象 Repository 接口） -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-infrastructure</artifactId>
+        </dependency>
+
+        <!-- ServiceImpl / IService / LambdaQueryWrapper -->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+        </dependency>
+
+        <!-- @Service / @RequiredArgsConstructor 等 Spring 容器注解 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
+        <!-- AuthenticationManager / UsernamePasswordAuthenticationToken -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <!-- PasswordEncoder / PasswordEncoderFactories -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-crypto</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>
