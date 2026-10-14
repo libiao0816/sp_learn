@@ -12,7 +12,7 @@ public class JwtProperties {
 
     private Long refreshTtl;
 
-    private Long ttl;
+    private Long accessTtl;
 
     private String tokenName;
 

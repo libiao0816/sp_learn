@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         List<String> authList = loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         User userBuild = User.builder().id(loginUser.getId()).username(loginUser.getUsername()).build();
 
-        String accessToken = JwtUtil.createToken(userBuild, jwtProperties.getSecret(), jwtProperties.getTtl(), authList,
+        String accessToken = JwtUtil.createToken(userBuild, jwtProperties.getSecret(), jwtProperties.getAccessTtl(), authList,
                 TokenTypeEnum.ACCESS_TOKEN.getType());
         String refreshToken = JwtUtil.createToken(userBuild, jwtProperties.getSecret(), jwtProperties.getRefreshTtl(),
                 authList, TokenTypeEnum.REFRESH_TOKEN.getType());
@@ -99,7 +99,7 @@ public class AuthServiceImpl implements AuthService {
         User user1 = new User();
         BeanUtils.copyProperties(loginUser, user1);
         List<String> authList = loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        return JwtUtil.createToken(user1, jwtProperties.getSecret(), jwtProperties.getTtl(),
+        return JwtUtil.createToken(user1, jwtProperties.getSecret(), jwtProperties.getAccessTtl(),
                 authList,
                 TokenTypeEnum.ACCESS_TOKEN.getType());
     }

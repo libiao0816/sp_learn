@@ -75,7 +75,7 @@ knife4j:
 
 lb:
   jwt:
-    ttl: 1800000
+    access-ttl: 1800000
     refresh-ttl: 604800000
     token-name: Authorization
     # HS256 要求密钥 >= 32 字节（256 bit），太短（如 "lb-secret" 仅 9 字节）会抛 WeakKeyException
