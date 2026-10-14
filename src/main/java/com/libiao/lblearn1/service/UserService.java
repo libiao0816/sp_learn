@@ -9,9 +9,5 @@ public interface UserService extends IService<User> {
 
     User getUserDetail();
 
-    String login(UserLoginDTO userLoginDTO);
-
-    Integer register(UserRegisterDTO userRegisterDTO);
-
-    Boolean logout(String token);
+    Boolean userIsExist(String username);
 }

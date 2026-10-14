@@ -7,11 +7,13 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @TableName("t_user")
 @Builder
 public class User {
@@ -27,6 +29,8 @@ public class User {
     private String email;
 
     private String phone;
+
+    private Integer status;
 
     @TableField(fill = FieldFill.INSERT)         // 插入时自动填充（第7章）
     private LocalDateTime createTime;

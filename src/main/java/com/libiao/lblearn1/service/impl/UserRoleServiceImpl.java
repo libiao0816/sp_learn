@@ -6,14 +6,14 @@ import com.libiao.lblearn1.domain.po.UserRole;
 import com.libiao.lblearn1.mapper.UserRoleMapper;
 import com.libiao.lblearn1.service.UserRoleService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> implements UserRoleService {
 
     private final UserRoleMapper userRoleMapper;

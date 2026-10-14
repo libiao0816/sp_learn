@@ -9,7 +9,7 @@ import com.libiao.lblearn1.domain.po.Cart;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
 import com.libiao.lblearn1.mapper.CartMapper;
 import com.libiao.lblearn1.service.CartService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -18,10 +18,10 @@ import java.util.List;
 
 @Service
 @Slf4j
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements CartService {
 
-    private CartMapper cartMapper;
+    private final CartMapper cartMapper;
 
     @Override
     public int addCart(CartAddDTO cartAddDTO) {

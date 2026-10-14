@@ -12,11 +12,11 @@ import com.libiao.lblearn1.domain.dto.user.UserRegisterDTO;
 import com.libiao.lblearn1.domain.po.User;
 import com.libiao.lblearn1.service.UserService;
 
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/user")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
@@ -25,23 +25,5 @@ public class UserController {
     public Result<User> detail() {
         User user = userService.getUserDetail();
         return Result.Success(user);
-    }
-
-    @PostMapping("/login")
-    public Result<String> login(@RequestBody UserLoginDTO userLoginDTO) {
-        String token = userService.login(userLoginDTO);
-        return Result.Success(token);
-    }
-
-    @PostMapping("/register")
-    public Result<Integer> register(@RequestBody UserRegisterDTO userRegisterDTO) {
-        Integer insert = userService.register(userRegisterDTO);
-        return Result.Success(insert);
-    }
-
-    @PostMapping("/logout")
-    public Result<Boolean> logout(@RequestHeader("Authorization") String token) {
-        Boolean logout = userService.logout(token);
-        return Result.Success(logout);
     }
 }

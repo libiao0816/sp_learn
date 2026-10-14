@@ -10,9 +10,12 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "lb.jwt")
 public class JwtProperties {
 
+    private Long refreshTtl;
+
     private Long ttl;
 
     private String tokenName;
 
     private String secret;
+
 }

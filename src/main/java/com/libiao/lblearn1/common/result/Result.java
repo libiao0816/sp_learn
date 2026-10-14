@@ -21,6 +21,14 @@ public class Result<T> {
     @Schema(description = "数据")
     private T data;
 
+    public static <T> Result<String> Success() {
+        Result<String> result = new Result<>();
+        result.code = ResultCodeEnum.SUCCESS.getCode();
+        result.msg = ResultCodeEnum.SUCCESS.getMsg();
+        result.data = "";
+        return result;
+    }
+
     public static <T> Result<T> Success(T data) {
         Result<T> result = new Result<>();
         result.code = ResultCodeEnum.SUCCESS.getCode();
@@ -29,24 +37,24 @@ public class Result<T> {
         return result;
     }
 
-    public static <T> Result<T> Error(Integer code, String msg) {
-        Result<T> result = new Result<>();
-        result.code = code;
-        result.msg = msg;
-        return result;
-    }
-
-    public static <T> Result<T> Error(String msg) {
-        Result<T> result = new Result<>();
-        result.code = ResultCodeEnum.SYSTEM_ERROR.getCode();
-        result.msg = msg;
-        return result;
-    }
-
-    public static <T> Result<T> Error() {
+    public static <T> Result<T> Fail() {
         Result<T> result = new Result<>();
         result.code = ResultCodeEnum.SYSTEM_ERROR.getCode();
         result.msg = ResultCodeEnum.SYSTEM_ERROR.getMsg();
+        return result;
+    }
+
+    public static <T> Result<T> Fail(String msg) {
+        Result<T> result = new Result<>();
+        result.code = ResultCodeEnum.SYSTEM_ERROR.getCode();
+        result.msg = msg;
+        return result;
+    }
+
+    public static <T> Result<T> Fail(Integer code, String msg) {
+        Result<T> result = new Result<>();
+        result.code = code;
+        result.msg = msg;
         return result;
     }
 }

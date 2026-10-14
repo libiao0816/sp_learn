@@ -2,16 +2,12 @@ package com.libiao.lblearn1.interceptor;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
-import com.libiao.lblearn1.annotation.RequireRole;
 import com.libiao.lblearn1.common.context.UserContext;
-import com.libiao.lblearn1.common.properties.AuthProperties;
-import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.common.utils.JwtUtil;
-import com.libiao.lblearn1.common.utils.TokenBlackList;
 import com.libiao.lblearn1.domain.po.User;
+import com.libiao.lblearn1.security.TokenBlackService;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -26,15 +22,15 @@ import com.libiao.lblearn1.common.properties.JwtProperties;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LoginInterceptor implements HandlerInterceptor {
 
     private final JwtProperties jwtProperties;
 
-    private final TokenBlackList  tokenBlackList;
+    private final TokenBlackService tokenBlackService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -56,26 +52,24 @@ public class LoginInterceptor implements HandlerInterceptor {
                     ResultCodeEnum.AUTHENTICATION_FAILED.getMsg()); // ★
         }
         if (claims != null) {
-            if(tokenBlackList.isBlackList(claims.getId())){
+            if(tokenBlackService.isBlackList(claims.getId())){
                 throw new BusinessException(ResultCodeEnum.AUTHENTICATION_FAILED.getCode(), "token 已失效，请重新登录"); // ★
             }
 
-            if(handler instanceof HandlerMethod hm){
-                RequireRole anno = hm.getMethodAnnotation(RequireRole.class);
-                if(Objects.nonNull(anno)){
-                    List<?> roles = claims.get("roles", List.class);
-                    boolean pass = Arrays.stream(anno.value()).anyMatch(roles::contains);
-                    if(!pass){
-                        throw new BusinessException(ResultCodeEnum.FORBIDDEN.getCode(), ResultCodeEnum.FORBIDDEN.getMsg()); // ★
-                    }
-                }
-            }
+//            if(handler instanceof HandlerMethod hm){
+//                RequireRole anno = hm.getMethodAnnotation(RequireRole.class);
+//                if(Objects.nonNull(anno)){
+//                    List<?> roles = claims.get("roles", List.class);
+//                    boolean pass = Arrays.stream(anno.value()).anyMatch(roles::contains);
+//                    if(!pass){
+//                        throw new BusinessException(ResultCodeEnum.FORBIDDEN.getCode(), ResultCodeEnum.FORBIDDEN.getMsg()); // ★
+//                    }
+//                }
+//            }
 
             UserContext.setUser(User.builder().id(Long.parseLong(claims.getSubject()))
                     .username(claims.get("username").toString()).build());
         }
-
-
 
         return true;
     }

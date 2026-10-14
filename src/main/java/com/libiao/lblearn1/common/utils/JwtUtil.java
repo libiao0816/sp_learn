@@ -30,15 +30,20 @@ public class JwtUtil {
     // 过期后 token 失效需重新登录；实际项目一般 30 分钟 ~ 2 小时
     //    private static final Duration EXPIRE = Duration.ofMillis(jwtProperties.getTtl());
 
+    public static String subStrToken(String token) {
+        return token.substring(7);
+    }
+
     public static SecretKey getKey(String secret) {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String createToken(User user,String secret,Long ttl,List<String> userRoles) {
+    public static String createToken(User user,String secret,Long ttl,List<String> userRoles,String type) {
         return Jwts.builder().subject(user.getId().toString())
                 .id(UUID.randomUUID().toString())
                 .claim("username", user.getUsername())
                 .claim("roles", userRoles)
+                .claim("tokenType",type)
                 .issuedAt(new Date()) // 签发时间
                 .expiration(new Date(System.currentTimeMillis() + ttl)) // 过期时间
                 .signWith(getKey(secret))
@@ -46,10 +51,11 @@ public class JwtUtil {
     }
 
     public static Claims parseToken(String token,String secret) {
+        String bearerToken = token.replace("Bearer ", "");
         return Jwts.parser()
                 .verifyWith(getKey(secret))
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(bearerToken)
                 .getPayload();
     }
 

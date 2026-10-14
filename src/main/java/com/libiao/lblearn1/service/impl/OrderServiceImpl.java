@@ -12,7 +12,7 @@ import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
 import com.libiao.lblearn1.mapper.OrderMapper;
 import com.libiao.lblearn1.service.OrderItemService;
 import com.libiao.lblearn1.service.OrderService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
     private final OrderItemService orderItemService;

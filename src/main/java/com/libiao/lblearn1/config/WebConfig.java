@@ -11,14 +11,14 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @AllArgsConstructor
 public class WebConfig implements WebMvcConfigurer {
 
-    private final LoginInterceptor loginInterceptor;
+    // private final LoginInterceptor loginInterceptor;
 
-    private final AuthProperties authProperties;
+    // private final AuthProperties authProperties;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(loginInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(authProperties.getWhiteList()); // 先拦所有，马上你就会发现出问题了
-    }
+    // @Override
+    // public void addInterceptors(InterceptorRegistry registry) {
+    //     registry.addInterceptor(loginInterceptor)
+    //             .addPathPatterns("/**")
+    //             .excludePathPatterns(authProperties.getWhiteList()); // 先拦所有，马上你就会发现出问题了
+    // }
 }

@@ -27,7 +27,8 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getUserDetail, logout } from '../api/user'
+import { getUserDetail } from '../api/user'
+import { logout } from '../api/auth'
 
 const router = useRouter()
 const loading = ref(false)
@@ -57,8 +58,9 @@ async function handleLogout() {
   loggingOut.value = true
   try {
     await logout()
-    // 退出成功后清除本地 token，并回到登录页
-    localStorage.removeItem('token')
+    // 退出成功后清除双 token，并回到登录页
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
     ElMessage.success('已退出登录')
     router.push('/login')
   } catch (e) {

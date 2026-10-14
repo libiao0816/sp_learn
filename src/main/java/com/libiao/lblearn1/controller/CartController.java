@@ -1,6 +1,5 @@
 package com.libiao.lblearn1.controller;
 
-import com.libiao.lblearn1.annotation.RequireRole;
 import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.cart.CartAddDTO;
@@ -29,7 +28,6 @@ public class CartController {
 
     @PostMapping("/page")
     @Operation(summary = "获取购物车分页", description = "获取购物车分页")
-    @RequireRole("admin")
     public Result<PageResult<CartPageVO>> getCartPage(CartPageDTO cartPageDTO) {
         return Result.Success(cartService.getCartPage(cartPageDTO));
     }

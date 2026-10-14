@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.libiao.lblearn1.domain.po.Category;
 import com.libiao.lblearn1.mapper.CategoryMapper;
 import com.libiao.lblearn1.service.CategoryService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category> implements CategoryService {
 
     private final CategoryMapper categoryMapper;

@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.common.utils;
+package com.libiao.lblearn1.security;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,7 +9,7 @@ import java.util.Objects;
 
 @Component
 @AllArgsConstructor
-public class TokenBlackList {
+public class TokenBlackService {
 
     /** Redis Key 前缀: lb:{模块}:{业务} , 后续拼接唯一标识 jti */
     private static final String KEY_PREFIX = "lb:user:black:";
