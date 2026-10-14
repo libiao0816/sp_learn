@@ -12,11 +12,11 @@ import java.time.LocalDateTime;
 @TableName("t_product")
 public class Product {
 
-    private long id;
+    private Long id;
 
     private String name;
 
-    private long categoryId;
+    private Long categoryId;
 
     private String description;
 

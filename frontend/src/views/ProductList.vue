@@ -131,7 +131,7 @@ function categoryName(id) {
 
 async function loadCategories() {
   try {
-    categories.value = (await listCategories()) || []
+    categories.value = (await listCategories())?.data || []
   } catch (e) {
     // 错误提示已在响应拦截器统一处理
   }
@@ -140,14 +140,15 @@ async function loadCategories() {
 async function loadProducts() {
   loading.value = true
   try {
-    const data = await pageProducts({
+    const res = await pageProducts({
       pageNum: query.pageNum,
       pageSize: query.pageSize,
       categoryId: query.categoryId || null,
       productName: query.productName || null
     })
-    tableData.value = data?.list || []
-    total.value = Number(data?.total || 0)
+    console.log(res.data)
+    tableData.value = res?.data?.list || []
+    total.value = Number(res?.data?.total || 0)
   } catch (e) {
     tableData.value = []
     total.value = 0

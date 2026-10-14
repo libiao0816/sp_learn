@@ -6,7 +6,13 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: () => import('../views/Login.vue'),
-    meta: { title: '登录' }
+    meta: { title: '登录', standalone: true }
+  },
+  {
+    path: '/register',
+    name: 'Register',
+    component: () => import('../views/Register.vue'),
+    meta: { title: '注册', standalone: true }
   },
   {
     path: '/product',
@@ -25,6 +31,12 @@ const routes = [
     name: 'OrderList',
     component: () => import('../views/OrderList.vue'),
     meta: { title: '订单列表' }
+  },
+  {
+    path: '/user',
+    name: 'UserProfile',
+    component: () => import('../views/UserProfile.vue'),
+    meta: { title: '个人中心' }
   },
 ]
 

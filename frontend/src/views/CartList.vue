@@ -81,8 +81,8 @@ async function loadCart() {
       pageNum: query.pageNum,
       pageSize: query.pageSize
     })
-    tableData.value = data?.list || []
-    total.value = Number(data?.total || 0)
+    tableData.value = data?.data?.list || []
+    total.value = Number(data?.data?.total || 0)
   } catch (e) {
     tableData.value = []
     total.value = 0

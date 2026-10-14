@@ -9,6 +9,26 @@ spring:
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:123456}
 
+  # Redis 配置 (默认连接本机 localhost:6379, 无密码)
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:123456}
+      database: ${REDIS_DATABASE:1}
+      # 连接超时时间 (毫秒)
+      timeout: 3000
+      lettuce:
+        pool:
+          # 最大空闲连接数 (默认8)
+          max-idle: 8
+          # 最小空闲连接数 (默认0)
+          min-idle: 3
+          # 最大连接数 (默认8, 生产环境可调大)
+          max-active: 20
+          # 最大等待时间 (毫秒, -1表示无限等待)
+          max-wait: 60000
+
 # MyBatis-Plus 配置
 mybatis-plus:
   # XML 映射文件位置 (使用注解 SQL 时可注释掉)
@@ -25,9 +45,9 @@ mybatis-plus:
       # 主键策略: 数据库自增
       id-type: auto
       # 逻辑删除字段 (表里定义了则打开, 没有就注释掉)
-      # logic-delete-field: deleted
-      # logic-delete-value: 1
-      # logic-not-delete-value: 0
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
 
 # springdoc-openapi (Swagger UI) 配置
 springdoc:
@@ -55,6 +75,13 @@ knife4j:
 
 lb:
   jwt:
-    ttl: 10000
+    access-ttl: 1800000
+    refresh-ttl: 604800000
     token-name: Authorization
-    secret: "lb-secret"
+    # HS256 要求密钥 >= 32 字节（256 bit），太短（如 "lb-secret" 仅 9 字节）会抛 WeakKeyException
+    # 生产环境应改为随机密钥并通过环境变量注入，不要写死提交到 git
+    secret: "lb-learn1-jwt-secret-must-be-at-least-32-bytes-long"
+  white-list:
+    - "/auth/login"
+    - "/auth/register"
+    - "/auth/refresh"

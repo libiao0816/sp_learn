@@ -16,3 +16,14 @@ import request from './request'
 export function pageOrders(data) {
   return request.post('/order/page', data)
 }
+
+/**
+ * 删除订单
+ * 后端：POST /order/deleteById?id=xxx（@RequestParam Long id）
+ * @param {number} id 订单ID
+ */
+export function deleteOrder(id) {
+  return request.post('/order/deleteById', null, {
+    params: { id }
+  })
+}

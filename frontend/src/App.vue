@@ -1,5 +1,9 @@
 <template>
-  <el-container class="layout">
+  <!-- 登录/注册等独立页面：不套主布局，整页渲染 -->
+  <router-view v-if="isStandalone" />
+
+  <!-- 其余业务页面：带顶部导航的整体布局 -->
+  <el-container v-else class="layout">
     <el-header class="header">
       <div class="logo">lb-learn1 商城</div>
       <el-menu
@@ -14,7 +18,7 @@
         <el-menu-item index="/product">商品列表</el-menu-item>
         <el-menu-item index="/cart">购物车</el-menu-item>
         <el-menu-item index="/order">订单列表</el-menu-item>
-        <el-menu-item index="/login">登录 / 注册</el-menu-item>
+        <el-menu-item index="/user">个人中心</el-menu-item>
       </el-menu>
     </el-header>
 
@@ -32,6 +36,9 @@ const route = useRoute()
 
 // 让顶部菜单高亮跟随当前路由
 const activeMenu = computed(() => route.path)
+
+// 独立页面（登录/注册）不显示顶部菜单布局
+const isStandalone = computed(() => route.meta.standalone === true)
 </script>
 
 <style>

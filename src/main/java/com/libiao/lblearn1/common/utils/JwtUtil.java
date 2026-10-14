@@ -1,5 +1,6 @@
 package com.libiao.lblearn1.common.utils;
 
+import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.domain.po.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,7 +9,9 @@ import lombok.AllArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
+import java.util.List;
 import java.time.Duration;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -26,15 +29,36 @@ public class JwtUtil {
 
     // 3. EXPIRE：token 的有效期，签发时以此计算过期时间（当前时间 + 1 小时）
     // 过期后 token 失效需重新登录；实际项目一般 30 分钟 ~ 2 小时
-//    private static final Duration EXPIRE = Duration.ofMillis(jwtProperties.getTtl());
+    //    private static final Duration EXPIRE = Duration.ofMillis(jwtProperties.getTtl());
+
+    public static String subStrToken(String token) {
+        return token.substring(7);
+    }
 
     public static SecretKey getKey(String secret) {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    public static String createToken(User user,String secret,Long ttl) {
+    /**
+     * 签发访问令牌：短有效期，用于每次业务请求的鉴权
+     */
+    public static String createAccessToken(User user, String secret, Long ttl, List<String> userRoles) {
+        return buildToken(user, secret, ttl, userRoles, TokenTypeEnum.ACCESS_TOKEN.getType());
+    }
+
+    /**
+     * 签发刷新令牌：长有效期，只用于换取新的访问令牌
+     */
+    public static String createRefreshToken(User user, String secret, Long ttl, List<String> userRoles) {
+        return buildToken(user, secret, ttl, userRoles, TokenTypeEnum.REFRESH_TOKEN.getType());
+    }
+
+    private static String buildToken(User user, String secret, Long ttl, List<String> userRoles, String type) {
         return Jwts.builder().subject(user.getId().toString())
+                .id(UUID.randomUUID().toString())
                 .claim("username", user.getUsername())
+                .claim("roles", userRoles)
+                .claim("tokenType", type)
                 .issuedAt(new Date()) // 签发时间
                 .expiration(new Date(System.currentTimeMillis() + ttl)) // 过期时间
                 .signWith(getKey(secret))
@@ -42,10 +66,11 @@ public class JwtUtil {
     }
 
     public static Claims parseToken(String token,String secret) {
+        String bearerToken = token.replace("Bearer ", "");
         return Jwts.parser()
                 .verifyWith(getKey(secret))
                 .build()
-                .parseSignedClaims(token)
+                .parseSignedClaims(bearerToken)
                 .getPayload();
     }
 

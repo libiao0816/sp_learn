@@ -66,9 +66,10 @@
           <template #default="{ row }">{{ row.remark || '-' }}</template>
         </el-table-column>
         <el-table-column prop="createTime" label="下单时间" width="170" />
-        <el-table-column label="操作" width="120" fixed="right">
+        <el-table-column label="操作" width="160" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" @click="openDetail(row)">详情</el-button>
+            <el-button link type="danger" @click="handleDelete(row)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -126,7 +127,8 @@
 
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
-import { pageOrders } from '../api/order'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import { pageOrders, deleteOrder } from '../api/order'
 
 const STATUS_MAP = {
   0: { label: '待支付', tag: 'warning' },
@@ -175,8 +177,8 @@ async function loadOrders() {
       createTimeOrderBy: query.createTimeOrderBy ?? null
     }
     const data = await pageOrders(payload)
-    tableData.value = data?.list || []
-    total.value = Number(data?.total || 0)
+    tableData.value = data?.data?.list || []
+    total.value = Number(data?.data?.total || 0)
   } catch (e) {
     tableData.value = []
     total.value = 0
@@ -202,6 +204,30 @@ function openDetail(row) {
   // 直接用列表数据，后端一次返回已带 orderItems
   detail.value = row
   detailVisible.value = true
+}
+
+async function handleDelete(row) {
+  try {
+    await ElMessageBox.confirm(
+      `确定删除订单 ${row.orderNo} 吗？删除后不可恢复`,
+      '提示',
+      { type: 'warning' }
+    )
+  } catch (e) {
+    return // 用户取消
+  }
+
+  try {
+    await deleteOrder(row.id)
+    ElMessage.success('删除成功')
+    // 删除后若当前页已空，回退一页
+    if (tableData.value.length === 1 && query.pageNum > 1) {
+      query.pageNum -= 1
+    }
+    loadOrders()
+  } catch (e) {
+    // 错误提示已在响应拦截器统一处理
+  }
 }
 
 onMounted(loadOrders)

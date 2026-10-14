@@ -1,30 +1,32 @@
 <template>
-  <div class="login-wrap">
-    <el-card class="login-card">
+  <div class="auth-wrap">
+    <el-card class="auth-card">
       <template #header>
-        <div class="card-title">登录 / 注册</div>
+        <div class="card-title">登录</div>
       </template>
 
-      <el-alert
-        type="info"
-        :closable="false"
-        show-icon
-        title="后端 /user/login 与 /user/register 目前是空实现，仅返回成功，这里只演示前端调用流程。"
-        style="margin-bottom: 16px"
-      />
-
-      <el-form :model="form" label-width="70px">
+      <el-form :model="form" label-width="70px" @submit.prevent>
         <el-form-item label="用户名">
           <el-input v-model="form.username" placeholder="请输入用户名" />
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.password" type="password" placeholder="请输入密码" />
+          <el-input
+            v-model="form.password"
+            type="password"
+            placeholder="请输入密码"
+            show-password
+            @keyup.enter="handleLogin"
+          />
         </el-form-item>
       </el-form>
 
       <div class="btn-group">
         <el-button type="primary" :loading="loading" @click="handleLogin">登录</el-button>
-        <el-button :loading="loading" @click="handleRegister">注册</el-button>
+      </div>
+
+      <div class="tip">
+        还没有账号？
+        <el-link type="primary" :underline="false" @click="router.push('/register')">去注册</el-link>
       </div>
     </el-card>
   </div>
@@ -34,7 +36,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { login, register } from '../api/user'
+import { login } from '../api/auth'
 
 const router = useRouter()
 const loading = ref(false)
@@ -44,7 +46,7 @@ const form = reactive({
   password: ''
 })
 
-// 登录：调用后端接口，成功后写入 token（后端暂未真正下发 token，这里先写占位值）
+// 登录：调用后端接口，成功后写入 token
 async function handleLogin() {
   if (!form.username || !form.password) {
     ElMessage.warning('请输入用户名和密码')
@@ -52,26 +54,14 @@ async function handleLogin() {
   }
   loading.value = true
   try {
-    await login()
-    // 后端 LoginInterceptor 只校验 Authorization 头是否非空，
-    // 后续接入真实 JWT 后，这里换成接口返回的 token 即可
-    localStorage.setItem('token', `token-${form.username}`)
+    const res = await login({ username: form.username, password: form.password })
+    // 后端返回 { code, data: { accessToken, refreshToken }, msg }
+    localStorage.setItem('accessToken', res.data.accessToken)
+    localStorage.setItem('refreshToken', res.data.refreshToken)
     ElMessage.success('登录成功')
     router.push('/product')
-  } finally {
-    loading.value = false
-  }
-}
-
-async function handleRegister() {
-  if (!form.username || !form.password) {
-    ElMessage.warning('请输入用户名和密码')
-    return
-  }
-  loading.value = true
-  try {
-    await register()
-    ElMessage.success('注册接口调用成功（后端暂为空实现）')
+  } catch (e) {
+    // 错误提示已在响应拦截器统一处理
   } finally {
     loading.value = false
   }
@@ -79,13 +69,16 @@ async function handleRegister() {
 </script>
 
 <style scoped>
-.login-wrap {
+.auth-wrap {
   display: flex;
   justify-content: center;
-  padding-top: 60px;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f5f7fa;
 }
 
-.login-card {
+.auth-card {
   width: 460px;
 }
 
@@ -99,5 +92,12 @@ async function handleRegister() {
   justify-content: center;
   gap: 12px;
   margin-top: 8px;
+}
+
+.tip {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 13px;
+  color: #909399;
 }
 </style>

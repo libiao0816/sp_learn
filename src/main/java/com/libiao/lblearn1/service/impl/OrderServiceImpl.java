@@ -2,6 +2,8 @@ package com.libiao.lblearn1.service.impl;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
+import com.libiao.lblearn1.common.enums.OrderCodeEnum;
+import com.libiao.lblearn1.common.exception.BusinessException;
 import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.domain.dto.order.OrderPageDTO;
 import com.libiao.lblearn1.domain.po.Order;
@@ -10,7 +12,7 @@ import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
 import com.libiao.lblearn1.mapper.OrderMapper;
 import com.libiao.lblearn1.service.OrderItemService;
 import com.libiao.lblearn1.service.OrderService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +23,19 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
 
     private final OrderItemService orderItemService;
+
+    @Override
+    public Boolean deleteById(Long id) {
+        boolean result = removeById(id);
+        if(!result){
+            throw new BusinessException(OrderCodeEnum.ORDER_DELETE_FAILED.getCode(), OrderCodeEnum.ORDER_DELETE_FAILED.getMsg());
+        }
+        return Boolean.TRUE;
+    }
 
     @Override
     public PageResult<OrderPageVO> selectPage(OrderPageDTO orderPageDTO) {
@@ -38,10 +49,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                         Order::getCreateTime)
                 .page(new Page<>(orderPageDTO.getPageNum(), orderPageDTO.getPageSize()));
 
-        System.out.println("orderPage: " + orderPage);
-        System.out.println("orderPage.getRecords(): " + orderPage.getRecords());
         List<Long> orderIds = orderPage.getRecords().stream().map(Order::getId).collect(Collectors.toList());
-        System.out.println("orderIds: " + orderIds);
 
         List<OrderItem> orderItemsByOrderIds = orderItemService.getOrderItemsByOrderIds(orderIds);
         Map<Long, List<OrderItem>> orderItemMap = orderItemsByOrderIds.stream()
