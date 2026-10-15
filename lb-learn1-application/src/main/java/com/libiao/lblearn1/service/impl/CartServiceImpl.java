@@ -8,7 +8,7 @@ import com.libiao.lblearn1.domain.dto.cart.CartPageDTO;
 import com.libiao.lblearn1.domain.po.Cart;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
 import com.libiao.lblearn1.mapper.CartMapper;
-import com.libiao.lblearn1.domain.security.LoginUser;
+import com.libiao.lblearn1.domain.security.LoginSysUser;
 import com.libiao.lblearn1.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -51,12 +51,12 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
 
     @Override
     public PageResult<CartPageVO> getCartPage(CartPageDTO cartPageDTO) {
-        LoginUser loginUser = (LoginUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        LoginSysUser loginSysUser = (LoginSysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Page<CartPageVO> page = cartMapper.getCartPage(
                 new Page<>(cartPageDTO.getPageNum(), cartPageDTO.getPageSize()),
                 cartPageDTO,
-                loginUser.getId()
+                loginSysUser.getId()
         );
         return new PageResult<>(page.getTotal(), page.getRecords());
     }

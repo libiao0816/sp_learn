@@ -5,7 +5,6 @@ import com.libiao.lblearn1.domain.po.OrderItem;
 import com.libiao.lblearn1.mapper.OrderItemMapper;
 import com.libiao.lblearn1.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -14,8 +13,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class OrderItemServiceImpl extends ServiceImpl<OrderItemMapper, OrderItem> implements OrderItemService {
-
-    private final OrderItemMapper orderItemMapper;
 
     @Override
     public List<OrderItem> getOrderItemsByOrderIds(List<Long> orderIds) {

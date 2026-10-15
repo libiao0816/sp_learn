@@ -1,14 +1,14 @@
 package com.libiao.lblearn1.controller;
 
 import com.libiao.lblearn1.common.utils.JwtUtil;
-import com.libiao.lblearn1.domain.vo.user.LoginUserVO;
+import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
 import com.libiao.lblearn1.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import com.libiao.lblearn1.common.result.Result;
-import com.libiao.lblearn1.domain.dto.user.UserLoginDTO;
-import com.libiao.lblearn1.domain.dto.user.UserRegisterDTO;
+import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
+import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
 
 import java.util.Map;
 
@@ -21,14 +21,14 @@ public class AuhController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public Result<LoginUserVO> login(@RequestBody UserLoginDTO userLoginDTO) {
-        LoginUserVO token = authService.login(userLoginDTO);
+    public Result<LoginSysUserVO> login(@RequestBody SysUserLoginDTO sysUserLoginDTO) {
+        LoginSysUserVO token = authService.login(sysUserLoginDTO);
         return Result.Success(token);
     }
     
     @PostMapping("/register")
-    public Result<Integer> register(@RequestBody UserRegisterDTO userRegisterDTO) {
-        Integer insert = authService.register(userRegisterDTO);
+    public Result<Integer> register(@RequestBody SysUserRegisterDTO sysUserRegisterDTO) {
+        Integer insert = authService.register(sysUserRegisterDTO);
         return Result.Success(insert);
     }
 

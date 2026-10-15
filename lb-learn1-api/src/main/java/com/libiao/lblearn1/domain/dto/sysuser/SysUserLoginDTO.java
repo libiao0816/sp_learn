@@ -1,10 +1,10 @@
-package com.libiao.lblearn1.domain.dto.user;
+package com.libiao.lblearn1.domain.dto.sysuser;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class UserRegisterDTO {
+public class SysUserLoginDTO {
 
     @NotBlank(message = "用户名不能为空")
     private String username;

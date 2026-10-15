@@ -4,7 +4,7 @@ import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.common.properties.AuthProperties;
 import com.libiao.lblearn1.common.properties.JwtProperties;
 import com.libiao.lblearn1.common.utils.JwtUtil;
-import com.libiao.lblearn1.domain.security.LoginUser;
+import com.libiao.lblearn1.domain.security.LoginSysUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -72,7 +72,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     return;
                 }
 
-                Long userId = Long.valueOf(claims.getSubject());
+                Long sysUserId = Long.valueOf(claims.getSubject());
                 String username = claims.get("username", String.class);
 
                 @SuppressWarnings("unchecked")
@@ -83,7 +83,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 .map(SimpleGrantedAuthority::new)
                                 .toList();
 
-                LoginUser principal = new LoginUser(userId, username, List.copyOf(authorities));
+                LoginSysUser principal = new LoginSysUser(sysUserId, username, List.copyOf(authorities));
 
                 // ★ Security 6 推荐写法：新建空 Context 再 set，避免复用线程上的残留身份
                 SecurityContext context = SecurityContextHolder.createEmptyContext();

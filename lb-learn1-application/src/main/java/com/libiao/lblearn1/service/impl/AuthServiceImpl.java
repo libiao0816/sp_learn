@@ -2,18 +2,18 @@ package com.libiao.lblearn1.service.impl;
 
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;
 import com.libiao.lblearn1.common.enums.TokenTypeEnum;
-import com.libiao.lblearn1.common.enums.UserErrorCodeEnum;
+import com.libiao.lblearn1.common.enums.SysUserErrorCodeEnum;
 import com.libiao.lblearn1.common.exception.BusinessException;
 import com.libiao.lblearn1.common.properties.JwtProperties;
 import com.libiao.lblearn1.common.utils.JwtUtil;
-import com.libiao.lblearn1.domain.dto.user.UserLoginDTO;
-import com.libiao.lblearn1.domain.dto.user.UserRegisterDTO;
-import com.libiao.lblearn1.domain.po.User;
-import com.libiao.lblearn1.domain.vo.user.LoginUserVO;
-import com.libiao.lblearn1.domain.security.LoginUser;
-import com.libiao.lblearn1.mapper.UserMapper;
+import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
+import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
+import com.libiao.lblearn1.domain.po.SysUser;
+import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
+import com.libiao.lblearn1.domain.security.LoginSysUser;
+import com.libiao.lblearn1.mapper.SysUserMapper;
 import com.libiao.lblearn1.security.TokenBlackService;
-import com.libiao.lblearn1.security.UserDetailsServiceImpl;
+import com.libiao.lblearn1.security.SysUserDetailsServiceImpl;
 import com.libiao.lblearn1.service.AuthService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
@@ -37,42 +37,42 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserMapper userMapper;
+    private final SysUserMapper sysUserMapper;
 
     private final TokenBlackService tokenBlackService;
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final SysUserDetailsServiceImpl sysUserDetailsService;
 
     @Override
-    public LoginUserVO login(UserLoginDTO userLoginDTO) {
+    public LoginSysUserVO login(SysUserLoginDTO sysUserLoginDTO) {
         // ★核心一行：把用户名密码交给框架去校验
         // 它会走 UserDetailsService（查库） + PasswordEncoder（比对）
         // 校验失败抛 BadCredentialsException → 由 GlobalExceptionHandler 兜住
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        userLoginDTO.getUsername(), userLoginDTO.getPassword())); // 这个构造器 = 未认证状态
+                        sysUserLoginDTO.getUsername(), sysUserLoginDTO.getPassword())); // 这个构造器 = 未认证状态
 
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        List<String> authList = loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        LoginSysUser loginSysUser = (LoginSysUser) authentication.getPrincipal();
+        List<String> authList = loginSysUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
-        String accessToken = JwtUtil.createAccessToken(loginUser.getId(), loginUser.getUsername(),
+        String accessToken = JwtUtil.createAccessToken(loginSysUser.getId(), loginSysUser.getUsername(),
                 jwtProperties.getSecret(), jwtProperties.getAccessTtl(), authList);
-        String refreshToken = JwtUtil.createRefreshToken(loginUser.getId(), loginUser.getUsername(),
+        String refreshToken = JwtUtil.createRefreshToken(loginSysUser.getId(), loginSysUser.getUsername(),
                 jwtProperties.getSecret(), jwtProperties.getRefreshTtl(), authList);
 
-        return LoginUserVO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+        return LoginSysUserVO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
     @Override
-    public Integer register(UserRegisterDTO userRegisterDTO) {
-        User user = new User();
-        BeanUtils.copyProperties(userRegisterDTO, user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        int insert = userMapper.insert(user);
+    public Integer register(SysUserRegisterDTO sysUserRegisterDTO) {
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(sysUserRegisterDTO, sysUser);
+        sysUser.setPassword(passwordEncoder.encode(sysUser.getPassword()));
+        int insert = sysUserMapper.insert(sysUser);
 
         if (insert != 1) {
-            throw new BusinessException(UserErrorCodeEnum.REGISTER_FAILED.getCode(),
-                    UserErrorCodeEnum.REGISTER_FAILED.getMsg());
+            throw new BusinessException(SysUserErrorCodeEnum.REGISTER_FAILED.getCode(),
+                    SysUserErrorCodeEnum.REGISTER_FAILED.getMsg());
         }
 
         return insert;
@@ -94,9 +94,9 @@ public class AuthServiceImpl implements AuthService {
                     ResultCodeEnum.AUTHENTICATION_FAILED.getMsg());
         }
         // 重新查一次权限，顺便让权限变更在刷新时生效
-        LoginUser loginUser = (LoginUser) userDetailsService.loadUserByUsername(claims.get("username").toString());
-        List<String> authList = loginUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        return JwtUtil.createAccessToken(loginUser.getId(), loginUser.getUsername(), jwtProperties.getSecret(),
+        LoginSysUser loginSysUser = (LoginSysUser) sysUserDetailsService.loadUserByUsername(claims.get("username").toString());
+        List<String> authList = loginSysUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        return JwtUtil.createAccessToken(loginSysUser.getId(), loginSysUser.getUsername(), jwtProperties.getSecret(),
                 jwtProperties.getAccessTtl(), authList);
     }
 }

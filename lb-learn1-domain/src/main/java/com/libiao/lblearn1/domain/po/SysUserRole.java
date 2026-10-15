@@ -6,10 +6,10 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-@TableName("t_user_role")
-public class UserRole {
+@TableName("t_sys_user_role")
+public class SysUserRole {
 
-    private Long userId;
+    private Long sysUserId;
 
     private Long roleId;
 }

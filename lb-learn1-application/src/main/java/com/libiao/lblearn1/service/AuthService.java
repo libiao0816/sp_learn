@@ -1,14 +1,14 @@
 package com.libiao.lblearn1.service;
 
-import com.libiao.lblearn1.domain.dto.user.UserLoginDTO;
-import com.libiao.lblearn1.domain.dto.user.UserRegisterDTO;
-import com.libiao.lblearn1.domain.vo.user.LoginUserVO;
+import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
+import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
+import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
 
 public interface AuthService {
 
-    LoginUserVO login(UserLoginDTO userLoginDTO);
+    LoginSysUserVO login(SysUserLoginDTO sysUserLoginDTO);
 
-    Integer register(UserRegisterDTO userRegisterDTO);
+    Integer register(SysUserRegisterDTO sysUserRegisterDTO);
 
     Boolean logout(String token);
 

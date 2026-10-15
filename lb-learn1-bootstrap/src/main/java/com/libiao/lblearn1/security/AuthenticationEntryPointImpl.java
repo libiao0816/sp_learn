@@ -1,6 +1,5 @@
 package com.libiao.lblearn1.security;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;
 import com.libiao.lblearn1.common.result.Result;

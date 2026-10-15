@@ -1,11 +1,11 @@
-package com.libiao.lblearn1.domain.vo.user;
+package com.libiao.lblearn1.domain.vo.sysuser;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class LoginUserVO {
+public class LoginSysUserVO {
 
     private String accessToken;
 

@@ -27,7 +27,7 @@
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getUserDetail } from '../api/user'
+import { getSysUserDetail } from '../api/sysUser'
 import { logout } from '../api/auth'
 
 const router = useRouter()
@@ -35,11 +35,11 @@ const loading = ref(false)
 const loggingOut = ref(false)
 const detail = ref({})
 
-// 用户详情：后端返回 Result<User>，取 data 即用户信息
+// 管理端用户详情：后端返回 Result<SysUser>，取 data 即用户信息
 async function loadDetail() {
   loading.value = true
   try {
-    const res = await getUserDetail()
+    const res = await getSysUserDetail()
     detail.value = res?.data || {}
   } catch (e) {
     detail.value = {}

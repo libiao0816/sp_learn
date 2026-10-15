@@ -21,7 +21,7 @@
             <artifactId>mybatis-plus-annotation</artifactId>
         </dependency>
 
-        <!-- LoginUser 实现 UserDetails -->
+        <!-- LoginSysUser 实现 UserDetails -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>

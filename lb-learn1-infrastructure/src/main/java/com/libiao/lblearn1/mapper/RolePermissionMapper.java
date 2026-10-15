@@ -11,8 +11,8 @@ public interface RolePermissionMapper {
 
     @Select("select * from t_permission tp " +
             "left join t_role_permission trp on tp.id = trp.permission_id " +
-            "left join t_user_role tur on tur.role_id = trp.role_id " +
-            "where tur.user_id = #{userId};")
-    List<Permission> findPermissionsByUserId(Long userId);
+            "left join t_sys_user_role tsur on tsur.role_id = trp.role_id " +
+            "where tsur.sys_user_id = #{sysUserId};")
+    List<Permission> findPermissionsBySysUserId(Long sysUserId);
 
 }

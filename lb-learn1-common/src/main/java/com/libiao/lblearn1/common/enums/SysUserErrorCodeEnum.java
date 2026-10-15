@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum UserErrorCodeEnum {
+public enum SysUserErrorCodeEnum {
     /** 注册失败 */
     REGISTER_FAILED(1000, "注册失败"),
 

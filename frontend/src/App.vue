@@ -18,7 +18,7 @@
         <el-menu-item index="/product">商品列表</el-menu-item>
         <el-menu-item index="/cart">购物车</el-menu-item>
         <el-menu-item index="/order">订单列表</el-menu-item>
-        <el-menu-item index="/user">个人中心</el-menu-item>
+        <el-menu-item index="/sysUser">个人中心</el-menu-item>
       </el-menu>
     </el-header>
 

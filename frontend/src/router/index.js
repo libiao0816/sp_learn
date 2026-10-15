@@ -33,9 +33,9 @@ const routes = [
     meta: { title: '订单列表' }
   },
   {
-    path: '/user',
-    name: 'UserProfile',
-    component: () => import('../views/UserProfile.vue'),
+    path: '/sysUser',
+    name: 'SysUserProfile',
+    component: () => import('../views/SysUserProfile.vue'),
     meta: { title: '个人中心' }
   },
 ]
