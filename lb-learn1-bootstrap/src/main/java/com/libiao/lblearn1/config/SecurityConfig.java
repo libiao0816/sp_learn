@@ -31,10 +31,12 @@ public class SecurityConfig {
 
     // 配置安全过滤链
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPointImpl entryPoint,
+    public SecurityFilterChain adminFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPointImpl entryPoint,
                                            AccessDeniedHandlerImpl deniedHandler)
             throws Exception {
         http
+                // 只对 /admin/** 开头的请求进行认证
+                .securityMatcher("/admin/**")
                 // 关掉 CSRF：前后端分离用 JWT，不靠 Session Cookie，不需要 CSRF 防护
                 .csrf(csrf -> csrf.disable())
                 // 关掉 Session：无状态认证，不需要 Session Cookie

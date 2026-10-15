@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.controller;
+package com.libiao.lblearn1.controller.admin;
 
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.po.Category;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/admin/category")
 @RequiredArgsConstructor
 public class CategoryController {
 

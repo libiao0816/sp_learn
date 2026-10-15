@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.controller;
+package com.libiao.lblearn1.controller.admin;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +11,7 @@ import com.libiao.lblearn1.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/sysUser")
+@RequestMapping("/admin/sysUser")
 @RequiredArgsConstructor
 public class SysUserController {
 

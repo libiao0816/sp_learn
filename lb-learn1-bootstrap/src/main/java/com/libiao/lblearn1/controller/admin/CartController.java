@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.controller;
+package com.libiao.lblearn1.controller.admin;
 
 import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/admin/cart")
 @Tag(name = "购物车controller",description = "购物车")
 @RequiredArgsConstructor
 public class CartController {

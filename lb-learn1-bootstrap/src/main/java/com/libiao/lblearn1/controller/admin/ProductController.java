@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.controller;
+package com.libiao.lblearn1.controller.admin;
 
 import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product")
+@RequestMapping("/admin/product")
 @Tag(name = "商品controller",description = "sp")
 @RequiredArgsConstructor
 public class ProductController {

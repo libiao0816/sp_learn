@@ -14,16 +14,18 @@ import request from './request'
  * @param {number} [data.createTimeOrderBy] 1=按创建时间倒序
  */
 export function pageOrders(data) {
-  return request.post('/order/page', data)
+  return request.post('/admin/order/page', data)
 }
+
+
 
 /**
  * 删除订单
- * 后端：POST /order/deleteById?id=xxx（@RequestParam Long id）
+ * 后端：POST /admin/order/deleteById?id=xxx（@RequestParam Long id）
  * @param {number} id 订单ID
  */
 export function deleteOrder(id) {
-  return request.post('/order/deleteById', null, {
+  return request.post('/admin/order/deleteById', null, {
     params: { id }
   })
 }

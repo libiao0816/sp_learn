@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.controller;
+package com.libiao.lblearn1.controller.admin;
 
 import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/admin/order")
 @RequiredArgsConstructor
 public class OrderController {
 
