@@ -1,11 +1,11 @@
 package com.libiao.lblearn1.security.filter;
 
-import com.libiao.lblearn1.security.config.AuthProperties;
-import com.libiao.lblearn1.security.config.JwtProperties;
-import com.libiao.lblearn1.security.jwt.JwtUtil;
-import com.libiao.lblearn1.security.jwt.TokenBlackService;
-import com.libiao.lblearn1.security.jwt.TokenPayload;
-import com.libiao.lblearn1.security.jwt.TokenTypeEnum;
+import com.libiao.lblearn1.common.properties.AuthProperties;
+import com.libiao.lblearn1.common.properties.JwtProperties;
+import com.libiao.lblearn1.common.model.TokenPayload;
+import com.libiao.lblearn1.common.utils.JwtUtil;
+import com.libiao.lblearn1.redis.TokenBlackService;
+import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.security.sysUser.LoginSysUser;
 
 import io.jsonwebtoken.ExpiredJwtException;

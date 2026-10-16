@@ -1,8 +1,8 @@
 package com.libiao.lblearn1.controller.admin;
 
-import com.libiao.lblearn1.security.jwt.JwtUtil;
+import com.libiao.lblearn1.common.utils.JwtUtil;
 import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
-import com.libiao.lblearn1.service.AuthService;
+import com.libiao.lblearn1.service.admin.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -11,7 +11,6 @@ import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
 import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
 
 import java.util.Map;
-
 
 @RestController
 @RequestMapping("/admin/auth")

@@ -15,7 +15,7 @@
     <description>安全中心：JWT、登录用户、认证授权、Spring Security 配置（全部安全相关代码集中于此模块）</description>
 
     <dependencies>
-        <!-- Result / ResultCodeEnum；AuthProperties、JwtProperties 等配置属性的绑定注解 -->
+        <!-- Result / ResultCodeEnum -->
         <dependency>
             <groupId>com.libiao</groupId>
             <artifactId>lb-learn1-common</artifactId>
@@ -40,11 +40,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        <!-- TokenBlackService 依赖 RedisTemplate -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
 
         <!-- JWT 签发与解析 -->

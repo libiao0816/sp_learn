@@ -1,5 +1,6 @@
 package com.libiao.lblearn1.security.config;
 
+import com.libiao.lblearn1.common.properties.AuthProperties;
 import com.libiao.lblearn1.security.filter.JwtAuthenticationFilter;
 import com.libiao.lblearn1.security.handler.AccessDeniedHandlerImpl;
 import com.libiao.lblearn1.security.handler.AuthenticationEntryPointImpl;

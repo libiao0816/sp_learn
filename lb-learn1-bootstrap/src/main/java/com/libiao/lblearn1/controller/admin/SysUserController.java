@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.po.SysUser;
-import com.libiao.lblearn1.service.SysUserService;
+import com.libiao.lblearn1.service.admin.SysUserService;
 
 import lombok.RequiredArgsConstructor;
 

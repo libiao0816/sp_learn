@@ -21,6 +21,12 @@
             <artifactId>spring-boot-starter</artifactId>
         </dependency>
 
+        <!-- JwtUtil 的签发与解析（jjwt-impl / jjwt-jackson 由 bootstrap 运行时提供） -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+
         <!-- Result / PageResult 上的 @Schema 注解；同时供 api 模块传递使用 -->
         <dependency>
             <groupId>io.swagger.core.v3</groupId>

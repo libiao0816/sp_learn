@@ -2,7 +2,7 @@ package com.libiao.lblearn1.controller.admin;
 
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.po.Category;
-import com.libiao.lblearn1.service.CategoryService;
+import com.libiao.lblearn1.service.admin.CategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
