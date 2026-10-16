@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.common.properties;
+package com.libiao.lblearn1.security.config;
 
 
 import lombok.Data;

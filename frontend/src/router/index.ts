@@ -9,41 +9,29 @@ const routes: RouteRecordRaw[] = [
     meta: { title: '登录', standalone: true }
   },
   {
-    path: '/register',
-    name: 'Register',
-    component: () => import('../views/Register.vue'),
-    meta: { title: '注册', standalone: true }
-  },
-  {
     path: '/product',
     name: 'ProductList',
     component: () => import('../views/ProductList.vue'),
-    meta: { title: '商品列表' }
-  },
-  {
-    path: '/cart',
-    name: 'CartList',
-    component: () => import('../views/CartList.vue'),
-    meta: { title: '购物车' }
+    meta: { title: '商品管理' }
   },
   {
     path: '/order',
     name: 'OrderList',
     component: () => import('../views/OrderList.vue'),
-    meta: { title: '订单列表' }
+    meta: { title: '订单管理' }
+  },
+  {
+    path: '/user',
+    name: 'UserList',
+    component: () => import('../views/UserList.vue'),
+    meta: { title: '用户管理' }
   },
   {
     path: '/sysUser',
     name: 'SysUserProfile',
     component: () => import('../views/SysUserProfile.vue'),
     meta: { title: '个人中心' }
-  },
-  {
-    path: '/user',
-    name: 'UserList',
-    component: () => import('../views/UserList.vue'),
-    meta: { title: 'C 端用户列表' }
-  },
+  }
 ]
 
 const router = createRouter({

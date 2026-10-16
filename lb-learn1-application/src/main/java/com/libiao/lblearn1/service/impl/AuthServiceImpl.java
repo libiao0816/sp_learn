@@ -1,21 +1,21 @@
 package com.libiao.lblearn1.service.impl;
 
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;
-import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.common.enums.SysUserErrorCodeEnum;
 import com.libiao.lblearn1.common.exception.BusinessException;
-import com.libiao.lblearn1.common.properties.JwtProperties;
-import com.libiao.lblearn1.common.utils.JwtUtil;
 import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
 import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
 import com.libiao.lblearn1.domain.po.SysUser;
 import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
-import com.libiao.lblearn1.domain.security.LoginSysUser;
 import com.libiao.lblearn1.mapper.SysUserMapper;
-import com.libiao.lblearn1.security.TokenBlackService;
-import com.libiao.lblearn1.security.SysUserDetailsServiceImpl;
+import com.libiao.lblearn1.security.config.JwtProperties;
+import com.libiao.lblearn1.security.jwt.JwtUtil;
+import com.libiao.lblearn1.security.jwt.TokenBlackService;
+import com.libiao.lblearn1.security.jwt.TokenPayload;
+import com.libiao.lblearn1.security.jwt.TokenTypeEnum;
+import com.libiao.lblearn1.security.sysUser.LoginSysUser;
+import com.libiao.lblearn1.security.sysUser.SysUserDetailsServiceImpl;
 import com.libiao.lblearn1.service.AuthService;
-import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -80,21 +80,21 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public Boolean logout(String token) {
-        Claims claims = JwtUtil.parseToken(token, jwtProperties.getSecret());
-        tokenBlackService.addBlackList(claims.getId(), claims.getExpiration().getTime());
+        TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret());
+        tokenBlackService.addBlackList(payload.jti(), payload.expirationMillis());
         return true;
     }
 
     @Override
     public String refreshToken(String refreshToken) {
-        Claims claims = JwtUtil.parseToken(refreshToken, jwtProperties.getSecret());
+        TokenPayload payload = JwtUtil.parseToken(refreshToken, jwtProperties.getSecret());
         String tokenType = TokenTypeEnum.REFRESH_TOKEN.getType();
-        if (!tokenType.equals(claims.get("tokenType"))) {
+        if (!tokenType.equals(payload.tokenType())) {
             throw new BusinessException(ResultCodeEnum.AUTHENTICATION_FAILED.getCode(),
                     ResultCodeEnum.AUTHENTICATION_FAILED.getMsg());
         }
         // 重新查一次权限，顺便让权限变更在刷新时生效
-        LoginSysUser loginSysUser = (LoginSysUser) sysUserDetailsService.loadUserByUsername(claims.get("username").toString());
+        LoginSysUser loginSysUser = (LoginSysUser) sysUserDetailsService.loadUserByUsername(payload.username());
         List<String> authList = loginSysUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         return JwtUtil.createAccessToken(loginSysUser.getId(), loginSysUser.getUsername(), jwtProperties.getSecret(),
                 jwtProperties.getAccessTtl(), authList);

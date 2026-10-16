@@ -1,11 +1,13 @@
-package com.libiao.lblearn1.security;
+package com.libiao.lblearn1.security.filter;
 
-import com.libiao.lblearn1.common.enums.TokenTypeEnum;
-import com.libiao.lblearn1.common.properties.AuthProperties;
-import com.libiao.lblearn1.common.properties.JwtProperties;
-import com.libiao.lblearn1.common.utils.JwtUtil;
-import com.libiao.lblearn1.domain.security.LoginSysUser;
-import io.jsonwebtoken.Claims;
+import com.libiao.lblearn1.security.config.AuthProperties;
+import com.libiao.lblearn1.security.config.JwtProperties;
+import com.libiao.lblearn1.security.jwt.JwtUtil;
+import com.libiao.lblearn1.security.jwt.TokenBlackService;
+import com.libiao.lblearn1.security.jwt.TokenPayload;
+import com.libiao.lblearn1.security.jwt.TokenTypeEnum;
+import com.libiao.lblearn1.security.sysUser.LoginSysUser;
+
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -55,11 +57,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 第二个条件能避免覆盖前面过滤器已经放好的身份
         if (StringUtils.isNotBlank(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                Claims claims = JwtUtil.parseToken(token, jwtProperties.getSecret());// 签名不对/过期 → 抛异常
+                TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret());// 签名不对/过期 → 抛异常
 
                 List<String> whiteList = authProperties.getWhiteList();
                 // 如果是 refresh token，且当前请求不是 /auth/refresh → 拒绝
-                String tokenType = claims.get("tokenType", String.class);
+                String tokenType = payload.tokenType();
                 if (TokenTypeEnum.REFRESH_TOKEN.getType().equals(tokenType)
                         && !whiteList.contains(request.getRequestURI())) {
                     filterChain.doFilter(request, response); // 走 401 return ;
@@ -67,21 +69,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 }
 
                 // 注销黑名单校验：命中就当没登录，交给入口点返回 401
-                if (tokenBlackService.isBlackList(claims.getId())) {
+                if (tokenBlackService.isBlackList(payload.jti())) {
                     filterChain.doFilter(request, response);
                     return;
                 }
 
-                Long sysUserId = Long.valueOf(claims.getSubject());
-                String username = claims.get("username", String.class);
+                Long sysUserId = payload.userId();
+                String username = payload.username();
 
-                @SuppressWarnings("unchecked")
-                List<String> authoritiesStr = claims.get("roles", List.class);
                 // JWT 里存的 authority 已经带好前缀（ROLE_xxx 或 PERMISSION_xxx），直接使用即可
-                List<SimpleGrantedAuthority> authorities = authoritiesStr == null ? List.of()
-                        : authoritiesStr.stream()
-                                .map(SimpleGrantedAuthority::new)
-                                .toList();
+                List<SimpleGrantedAuthority> authorities = payload.roles().stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
 
                 LoginSysUser principal = new LoginSysUser(sysUserId, username, List.copyOf(authorities));
 

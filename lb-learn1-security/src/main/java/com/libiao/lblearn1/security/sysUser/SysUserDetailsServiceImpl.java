@@ -1,9 +1,8 @@
-package com.libiao.lblearn1.security;
+package com.libiao.lblearn1.security.sysUser;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.libiao.lblearn1.domain.po.Permission;
 import com.libiao.lblearn1.domain.po.SysUser;
-import com.libiao.lblearn1.domain.security.LoginSysUser;
 import com.libiao.lblearn1.mapper.RolePermissionMapper;
 import com.libiao.lblearn1.mapper.SysUserMapper;
 import com.libiao.lblearn1.mapper.SysUserRoleMapper;

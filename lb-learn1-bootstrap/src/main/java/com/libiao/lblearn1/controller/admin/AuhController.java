@@ -1,6 +1,6 @@
 package com.libiao.lblearn1.controller.admin;
 
-import com.libiao.lblearn1.common.utils.JwtUtil;
+import com.libiao.lblearn1.security.jwt.JwtUtil;
 import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
 import com.libiao.lblearn1.service.AuthService;
 import lombok.RequiredArgsConstructor;

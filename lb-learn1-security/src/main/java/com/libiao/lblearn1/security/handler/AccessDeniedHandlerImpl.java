@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.security;
+package com.libiao.lblearn1.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;

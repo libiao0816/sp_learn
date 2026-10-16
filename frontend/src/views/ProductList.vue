@@ -43,10 +43,9 @@
         <el-table-column prop="status" label="状态" width="90">
           <template #default="{ row }">{{ row.status === 1 ? '上架' : '下架' }}</template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="100" fixed="right">
           <template #default="{ row }">
             <el-button link type="primary" @click="openDetail(row.id)">详情</el-button>
-            <el-button link type="success" @click="openAdd(row)">加购</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -75,31 +74,13 @@
         <el-descriptions-item label="创建时间">{{ detail.createdTime || '-' }}</el-descriptions-item>
       </el-descriptions>
     </el-dialog>
-
-    <!-- 加入购物车弹窗 -->
-    <el-dialog v-model="addVisible" title="加入购物车" width="420px">
-      <el-form label-width="80px">
-        <el-form-item label="商品">
-          <span>{{ currentProduct.name }}</span>
-        </el-form-item>
-        <el-form-item label="数量">
-          <el-input-number v-model="addForm.quantity" :min="1" :max="999" />
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <el-button @click="addVisible = false">取消</el-button>
-        <el-button type="primary" :loading="adding" @click="handleAddCart">确定</el-button>
-      </template>
-    </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
-import { ElMessage } from 'element-plus'
 import { pageProducts, getProductDetail, type Product } from '../api/product'
 import { listCategories, type Category } from '../api/category'
-import { addCart } from '../api/cart'
 
 const loading = ref(false)
 const tableData = ref<Product[]>([])
@@ -116,12 +97,6 @@ const query = reactive({
 // 详情弹窗
 const detailVisible = ref(false)
 const detail = ref<Product | null>(null)
-
-// 加购弹窗
-const addVisible = ref(false)
-const adding = ref(false)
-const currentProduct = reactive<{ id: number | null; name: string }>({ id: null, name: '' })
-const addForm = reactive({ quantity: 1 })
 
 // 分类 id -> 名称
 function categoryName(id: number | string): string {
@@ -175,30 +150,6 @@ async function openDetail(id: number) {
     detailVisible.value = true
   } catch {
     // 错误提示已在响应拦截器统一处理
-  }
-}
-
-function openAdd(row: Product) {
-  currentProduct.id = row.id
-  currentProduct.name = row.name
-  addForm.quantity = 1
-  addVisible.value = true
-}
-
-async function handleAddCart() {
-  if (currentProduct.id === null) return
-  adding.value = true
-  try {
-    await addCart({
-      productId: currentProduct.id,
-      quantity: addForm.quantity
-    })
-    ElMessage.success('已加入购物车')
-    addVisible.value = false
-  } catch {
-    // 错误提示已在响应拦截器统一处理
-  } finally {
-    adding.value = false
   }
 }
 

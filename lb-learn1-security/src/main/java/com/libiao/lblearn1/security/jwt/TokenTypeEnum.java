@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.common.enums;
+package com.libiao.lblearn1.security.jwt;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

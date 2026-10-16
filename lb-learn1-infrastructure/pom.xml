@@ -12,7 +12,7 @@
 
     <artifactId>lb-learn1-infrastructure</artifactId>
     <name>lb-learn1-infrastructure</name>
-    <description>Mapper / DAO、Redis、持久层与缓存配置、安全领域适配</description>
+    <description>Mapper / DAO、Redis、持久层与缓存配置</description>
 
     <dependencies>
         <dependency>
@@ -53,12 +53,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-json</artifactId>
-        </dependency>
-
-        <!-- UserDetailsServiceImpl 需要 UserDetails / GrantedAuthority 等类型 -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
         </dependency>
 
         <dependency>

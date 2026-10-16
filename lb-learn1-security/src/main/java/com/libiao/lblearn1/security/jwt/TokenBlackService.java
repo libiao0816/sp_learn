@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.security;
+package com.libiao.lblearn1.security.jwt;
 
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

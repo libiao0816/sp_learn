@@ -17,4 +17,9 @@ public class Permission {
     private String code;
 
     private String name;
+
+    /**
+     * 权限类型：1-页面级 2-方法级 3-组件级（对应 PermissionTypeEnum）
+     */
+    private Integer type;
 }

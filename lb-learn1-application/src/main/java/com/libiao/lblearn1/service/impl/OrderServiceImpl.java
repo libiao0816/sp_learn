@@ -10,7 +10,7 @@ import com.libiao.lblearn1.domain.po.Order;
 import com.libiao.lblearn1.domain.po.OrderItem;
 import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
 import com.libiao.lblearn1.mapper.OrderMapper;
-import com.libiao.lblearn1.domain.security.LoginSysUser;
+import com.libiao.lblearn1.security.sysUser.LoginSysUser;
 import com.libiao.lblearn1.service.OrderItemService;
 import com.libiao.lblearn1.service.OrderService;
 import lombok.RequiredArgsConstructor;

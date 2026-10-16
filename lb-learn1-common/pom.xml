@@ -12,19 +12,13 @@
 
     <artifactId>lb-learn1-common</artifactId>
     <name>lb-learn1-common</name>
-    <description>工具类、通用异常、返回体、枚举、配置属性（最底层，不依赖任何业务模块）</description>
+    <description>工具类、通用异常、返回体、枚举（最底层，不依赖任何业务模块）</description>
 
     <dependencies>
         <!-- @Component / @ConfigurationProperties 需要 Spring 容器与 Boot 的配置绑定能力 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- JWT 签发与解析 -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
         </dependency>
 
         <!-- Result / PageResult 上的 @Schema 注解；同时供 api 模块传递使用 -->

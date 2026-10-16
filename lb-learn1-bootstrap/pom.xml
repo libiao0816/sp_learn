@@ -19,10 +19,15 @@
             <groupId>com.libiao</groupId>
             <artifactId>lb-learn1-application</artifactId>
         </dependency>
-        <!-- JwtAuthenticationFilter 注入 TokenBlackService，直接依赖基础设施实现 -->
+        <!-- 持久层实现（MyBatis mapper 注册与 Redis 配置） -->
         <dependency>
             <groupId>com.libiao</groupId>
             <artifactId>lb-learn1-infrastructure</artifactId>
+        </dependency>
+        <!-- 安全组件统一收敛在 security 模块（SecurityConfig / 过滤器 / JWT） -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-security</artifactId>
         </dependency>
 
         <dependency>
@@ -38,28 +43,6 @@
         <dependency>
             <groupId>com.baizhukui</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
-        </dependency>
-
-        <!-- JwtAuthenticationFilter 直接引用 Claims / ExpiredJwtException -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-impl</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt-jackson</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <!-- StringUtils（原来是随 knife4j 间接传递的） -->
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>

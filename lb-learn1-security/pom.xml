@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.libiao</groupId>
+        <artifactId>lb-learn1</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>lb-learn1-security</artifactId>
+    <name>lb-learn1-security</name>
+    <description>安全中心：JWT、登录用户、认证授权、Spring Security 配置（全部安全相关代码集中于此模块）</description>
+
+    <dependencies>
+        <!-- Result / ResultCodeEnum；AuthProperties、JwtProperties 等配置属性的绑定注解 -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-common</artifactId>
+        </dependency>
+        <!-- LoginSysUser 组装需要 SysUser / Permission 等 PO -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-domain</artifactId>
+        </dependency>
+        <!-- SysUserDetailsServiceImpl 需要直接查库（mapper 在本项目未抽象成 Repository） -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-infrastructure</artifactId>
+        </dependency>
+
+        <!-- OncePerRequestFilter / jakarta.servlet / ObjectMapper -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!-- UserDetails / SecurityFilterChain / PasswordEncoder / AuthenticationManager -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <!-- TokenBlackService 依赖 RedisTemplate -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- JWT 签发与解析 -->
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-impl</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-jackson</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- JwtAuthenticationFilter 里的 StringUtils -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
+        <!-- JwtAuthenticationFilter 重写 doFilterInternal 时参数上的 @NonNull -->
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+</project>

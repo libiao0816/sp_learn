@@ -2,7 +2,7 @@
   <div class="auth-wrap">
     <el-card class="auth-card">
       <template #header>
-        <div class="card-title">登录</div>
+        <div class="card-title">后台管理系统登录</div>
       </template>
 
       <el-form :model="form" label-width="70px" @submit.prevent>
@@ -22,11 +22,6 @@
 
       <div class="btn-group">
         <el-button type="primary" :loading="loading" @click="handleLogin">登录</el-button>
-      </div>
-
-      <div class="tip">
-        还没有账号？
-        <el-link type="primary" :underline="false" @click="router.push('/register')">去注册</el-link>
       </div>
     </el-card>
   </div>
@@ -58,6 +53,8 @@ async function handleLogin() {
     // 后端返回 { code, data: { accessToken, refreshToken }, msg }
     localStorage.setItem('accessToken', res.data.accessToken)
     localStorage.setItem('refreshToken', res.data.refreshToken)
+    // 记录用户名，供后台布局右上角展示
+    localStorage.setItem('username', form.username)
     ElMessage.success('登录成功')
     router.push('/product')
   } catch {
@@ -92,12 +89,5 @@ async function handleLogin() {
   justify-content: center;
   gap: 12px;
   margin-top: 8px;
-}
-
-.tip {
-  margin-top: 16px;
-  text-align: center;
-  font-size: 13px;
-  color: #909399;
 }
 </style>

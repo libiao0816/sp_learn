@@ -12,19 +12,13 @@
 
     <artifactId>lb-learn1-domain</artifactId>
     <name>lb-learn1-domain</name>
-    <description>实体 PO、登录用户领域对象（叶子模块，不依赖其它业务模块）</description>
+    <description>实体 PO（叶子模块，不依赖其它业务模块）</description>
 
     <dependencies>
         <!-- PO 上的 @TableName / @TableField / @TableLogic 注解，只引注解包保持轻量 -->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-annotation</artifactId>
-        </dependency>
-
-        <!-- LoginSysUser 实现 UserDetails -->
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-core</artifactId>
         </dependency>
 
         <dependency>

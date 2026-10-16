@@ -1,15 +1,12 @@
-package com.libiao.lblearn1.common.utils;
+package com.libiao.lblearn1.security.jwt;
 
-import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.AllArgsConstructor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
-import java.time.Duration;
 import java.util.UUID;
 
 import javax.crypto.SecretKey;
@@ -64,13 +61,27 @@ public class JwtUtil {
                 .compact();
     }
 
-    public static Claims parseToken(String token,String secret) {
+    /**
+     * 解析并校验 token，返回中立的 TokenPayload（而不是 jjwt 的 Claims，避免类型泄漏到其他模块）
+     */
+    public static TokenPayload parseToken(String token, String secret) {
         String bearerToken = token.replace("Bearer ", "");
-        return Jwts.parser()
+        Claims claims = Jwts.parser()
                 .verifyWith(getKey(secret))
                 .build()
                 .parseSignedClaims(bearerToken)
                 .getPayload();
+
+        @SuppressWarnings("unchecked")
+        List<String> roles = claims.get("roles", List.class);
+
+        return new TokenPayload(
+                Long.valueOf(claims.getSubject()),
+                claims.get("username", String.class),
+                roles == null ? List.of() : List.copyOf(roles),
+                claims.get("tokenType", String.class),
+                claims.getId(),
+                claims.getExpiration().getTime());
     }
 
 }

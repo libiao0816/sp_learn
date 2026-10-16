@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.domain.security;
+package com.libiao.lblearn1.security.sysUser;
 
 import com.libiao.lblearn1.domain.po.SysUser;
 import lombok.Getter;

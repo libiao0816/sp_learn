@@ -32,6 +32,11 @@
             <groupId>com.libiao</groupId>
             <artifactId>lb-learn1-infrastructure</artifactId>
         </dependency>
+        <!-- JWT、LoginSysUser、TokenBlackService、SecurityConfig 等安全组件 -->
+        <dependency>
+            <groupId>com.libiao</groupId>
+            <artifactId>lb-learn1-security</artifactId>
+        </dependency>
 
         <!-- ServiceImpl / IService / LambdaQueryWrapper -->
         <dependency>
