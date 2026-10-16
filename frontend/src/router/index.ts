@@ -1,6 +1,6 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   { path: '/', redirect: '/product' },
   {
     path: '/login',
@@ -37,6 +37,12 @@ const routes = [
     name: 'SysUserProfile',
     component: () => import('../views/SysUserProfile.vue'),
     meta: { title: '个人中心' }
+  },
+  {
+    path: '/user',
+    name: 'UserList',
+    component: () => import('../views/UserList.vue'),
+    meta: { title: 'C 端用户列表' }
   },
 ]
 

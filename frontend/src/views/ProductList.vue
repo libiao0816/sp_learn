@@ -94,17 +94,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
-import { pageProducts, getProductDetail } from '../api/product'
-import { listCategories } from '../api/category'
+import { pageProducts, getProductDetail, type Product } from '../api/product'
+import { listCategories, type Category } from '../api/category'
 import { addCart } from '../api/cart'
 
 const loading = ref(false)
-const tableData = ref([])
+const tableData = ref<Product[]>([])
 const total = ref(0)
-const categories = ref([])
+const categories = ref<Category[]>([])
 
 const query = reactive({
   pageNum: 1,
@@ -115,16 +115,16 @@ const query = reactive({
 
 // 详情弹窗
 const detailVisible = ref(false)
-const detail = ref(null)
+const detail = ref<Product | null>(null)
 
 // 加购弹窗
 const addVisible = ref(false)
 const adding = ref(false)
-const currentProduct = reactive({ id: null, name: '' })
+const currentProduct = reactive<{ id: number | null; name: string }>({ id: null, name: '' })
 const addForm = reactive({ quantity: 1 })
 
 // 分类 id -> 名称
-function categoryName(id) {
+function categoryName(id: number | string): string {
   const hit = categories.value.find((c) => String(c.id) === String(id))
   return hit ? hit.name : '-'
 }
@@ -132,7 +132,7 @@ function categoryName(id) {
 async function loadCategories() {
   try {
     categories.value = (await listCategories())?.data || []
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   }
 }
@@ -143,13 +143,13 @@ async function loadProducts() {
     const res = await pageProducts({
       pageNum: query.pageNum,
       pageSize: query.pageSize,
-      categoryId: query.categoryId || null,
+      categoryId: query.categoryId ? Number(query.categoryId) : null,
       productName: query.productName || null
     })
     console.log(res.data)
     tableData.value = res?.data?.list || []
     total.value = Number(res?.data?.total || 0)
-  } catch (e) {
+  } catch {
     tableData.value = []
     total.value = 0
   } finally {
@@ -168,16 +168,17 @@ function handleReset() {
   handleSearch()
 }
 
-async function openDetail(id) {
+async function openDetail(id: number) {
   try {
-    detail.value = await getProductDetail(id)
+    const res = await getProductDetail(id)
+    detail.value = res?.data ?? null
     detailVisible.value = true
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   }
 }
 
-function openAdd(row) {
+function openAdd(row: Product) {
   currentProduct.id = row.id
   currentProduct.name = row.name
   addForm.quantity = 1
@@ -185,6 +186,7 @@ function openAdd(row) {
 }
 
 async function handleAddCart() {
+  if (currentProduct.id === null) return
   adding.value = true
   try {
     await addCart({
@@ -193,7 +195,7 @@ async function handleAddCart() {
     })
     ElMessage.success('已加入购物车')
     addVisible.value = false
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   } finally {
     adding.value = false

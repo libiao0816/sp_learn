@@ -23,17 +23,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { getSysUserDetail } from '../api/sysUser'
+import { getSysUserDetail, type SysUserVO } from '../api/sysUser'
 import { logout } from '../api/auth'
 
 const router = useRouter()
 const loading = ref(false)
 const loggingOut = ref(false)
-const detail = ref({})
+const detail = ref<Partial<SysUserVO>>({})
 
 // 管理端用户详情：后端返回 Result<SysUser>，取 data 即用户信息
 async function loadDetail() {
@@ -41,7 +41,7 @@ async function loadDetail() {
   try {
     const res = await getSysUserDetail()
     detail.value = res?.data || {}
-  } catch (e) {
+  } catch {
     detail.value = {}
   } finally {
     loading.value = false
@@ -51,7 +51,7 @@ async function loadDetail() {
 async function handleLogout() {
   try {
     await ElMessageBox.confirm('确定要退出登录吗？', '提示', { type: 'warning' })
-  } catch (e) {
+  } catch {
     return // 用户取消
   }
 
@@ -63,7 +63,7 @@ async function handleLogout() {
     localStorage.removeItem('refreshToken')
     ElMessage.success('已退出登录')
     router.push('/login')
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   } finally {
     loggingOut.value = false

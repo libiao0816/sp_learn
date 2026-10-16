@@ -54,22 +54,22 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { pageCart, removeCart } from '../api/cart'
+import { pageCart, removeCart, type CartItemVO } from '../api/cart'
 
 const loading = ref(false)
-const tableData = ref([])
+const tableData = ref<CartItemVO[]>([])
 const total = ref(0)
-const selectedIds = ref([])
+const selectedIds = ref<number[]>([])
 
 const query = reactive({
   pageNum: 1,
   pageSize: 5
 })
 
-const subtotal = (row) => {
+const subtotal = (row: CartItemVO): string => {
   if (row.price === undefined || row.price === null) return '-'
   return (Number(row.price) * Number(row.quantity)).toFixed(2)
 }
@@ -83,7 +83,7 @@ async function loadCart() {
     })
     tableData.value = data?.data?.list || []
     total.value = Number(data?.data?.total || 0)
-  } catch (e) {
+  } catch {
     tableData.value = []
     total.value = 0
   } finally {
@@ -96,11 +96,11 @@ function handleSearch() {
   loadCart()
 }
 
-function handleSelectionChange(rows) {
+function handleSelectionChange(rows: CartItemVO[]) {
   selectedIds.value = rows.map((r) => r.id)
 }
 
-async function handleRemoveOne(id) {
+async function handleRemoveOne(id: number) {
   await confirmRemove([id])
 }
 
@@ -108,13 +108,13 @@ async function handleRemove() {
   await confirmRemove(selectedIds.value)
 }
 
-async function confirmRemove(ids) {
+async function confirmRemove(ids: number[]) {
   if (!ids.length) return
   try {
     await ElMessageBox.confirm(`确定删除选中的 ${ids.length} 条购物车记录吗？`, '提示', {
       type: 'warning'
     })
-  } catch (e) {
+  } catch {
     return // 用户取消
   }
 
@@ -126,7 +126,7 @@ async function confirmRemove(ids) {
       query.pageNum -= 1
     }
     loadCart()
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   }
 }

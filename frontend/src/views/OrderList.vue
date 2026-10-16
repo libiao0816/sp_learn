@@ -125,38 +125,38 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed, onMounted, reactive, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { pageOrders, deleteOrder } from '../api/order'
+import { pageOrders, deleteOrder, type OrderPageVO } from '../api/order'
 
-const STATUS_MAP = {
+const STATUS_MAP: Record<number, { label: string; tag: any }> = {
   0: { label: '待支付', tag: 'warning' },
   1: { label: '已支付', tag: 'primary' },
   2: { label: '已发货', tag: '' },
   3: { label: '已完成', tag: 'success' },
   4: { label: '已取消', tag: 'info' }
 }
-const statusLabel = (s) => STATUS_MAP[s]?.label ?? '未知'
-const statusTagType = (s) => STATUS_MAP[s]?.tag ?? 'info'
+const statusLabel = (s: number): string => STATUS_MAP[s]?.label ?? '未知'
+const statusTagType = (s: number): any => STATUS_MAP[s]?.tag ?? 'info'
 
 const loading = ref(false)
-const tableData = ref([])
+const tableData = ref<OrderPageVO[]>([])
 const total = ref(0)
 
 const query = reactive({
   pageNum: 1,
   pageSize: 5,
-  status: null,
-  userId: null,
-  orderId: null,
+  status: null as number | null,
+  userId: null as string | null,
+  orderId: null as string | null,
   // 后端: 0=升序, 1=倒序; 不设则默认倒序
   createTimeOrderBy: 1
 })
 
 // 详情抽屉：直接用列表里的原始行（已经带 orderItems）
 const detailVisible = ref(false)
-const detail = ref(null)
+const detail = ref<OrderPageVO | null>(null)
 const detailDrawerTitle = computed(() =>
   detail.value ? `订单 ${detail.value.orderNo} 详情` : '订单详情'
 )
@@ -179,7 +179,7 @@ async function loadOrders() {
     const data = await pageOrders(payload)
     tableData.value = data?.data?.list || []
     total.value = Number(data?.data?.total || 0)
-  } catch (e) {
+  } catch {
     tableData.value = []
     total.value = 0
   } finally {
@@ -200,20 +200,20 @@ function handleReset() {
   handleSearch()
 }
 
-function openDetail(row) {
+function openDetail(row: OrderPageVO) {
   // 直接用列表数据，后端一次返回已带 orderItems
   detail.value = row
   detailVisible.value = true
 }
 
-async function handleDelete(row) {
+async function handleDelete(row: OrderPageVO) {
   try {
     await ElMessageBox.confirm(
       `确定删除订单 ${row.orderNo} 吗？删除后不可恢复`,
       '提示',
       { type: 'warning' }
     )
-  } catch (e) {
+  } catch {
     return // 用户取消
   }
 
@@ -225,7 +225,7 @@ async function handleDelete(row) {
       query.pageNum -= 1
     }
     loadOrders()
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   }
 }

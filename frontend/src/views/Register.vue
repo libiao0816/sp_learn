@@ -40,7 +40,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
@@ -70,7 +70,7 @@ async function handleRegister() {
     await register({ username: form.username, password: form.password })
     ElMessage.success('注册成功，请登录')
     router.push('/login')
-  } catch (e) {
+  } catch {
     // 错误提示已在响应拦截器统一处理
   } finally {
     loading.value = false

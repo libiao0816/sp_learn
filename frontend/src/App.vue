@@ -19,6 +19,7 @@
         <el-menu-item index="/cart">购物车</el-menu-item>
         <el-menu-item index="/order">订单列表</el-menu-item>
         <el-menu-item index="/sysUser">个人中心</el-menu-item>
+        <el-menu-item index="/user">C 端用户</el-menu-item>
       </el-menu>
     </el-header>
 
@@ -28,7 +29,7 @@
   </el-container>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
