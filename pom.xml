@@ -119,7 +119,7 @@
                 <artifactId>swagger-annotations-jakarta</artifactId>
                 <version>${swagger-annotations.version}</version>
             </dependency>
-            <!-- JSpecify 空安全注解（JwtAuthenticationFilter 的 @NonNull） -->
+            <!-- Jspecify 空安全注解（JwtAuthenticationFilter 的 @NonNull） -->
             <dependency>
                 <groupId>org.jspecify</groupId>
                 <artifactId>jspecify</artifactId>

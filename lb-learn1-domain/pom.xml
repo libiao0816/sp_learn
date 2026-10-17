@@ -21,6 +21,12 @@
             <artifactId>mybatis-plus-annotation</artifactId>
         </dependency>
 
+        <!-- PO 上的 @Schema 接口文档注解（同为轻量注解包，不引入任何业务模块） -->
+        <dependency>
+            <groupId>io.swagger.core.v3</groupId>
+            <artifactId>swagger-annotations-jakarta</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

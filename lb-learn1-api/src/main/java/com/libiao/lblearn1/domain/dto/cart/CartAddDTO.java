@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
+@Schema(description = "购物车新增参数")
 public class CartAddDTO {
 
     /**
