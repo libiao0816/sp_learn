@@ -3,8 +3,8 @@ package com.libiao.lblearn1.service.admin.impl;
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;
 import com.libiao.lblearn1.common.enums.SysUserErrorCodeEnum;
 import com.libiao.lblearn1.common.exception.BusinessException;
-import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
-import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
+import com.libiao.lblearn1.domain.dto.sysUser.SysUserLoginDTO;
+import com.libiao.lblearn1.domain.dto.sysUser.SysUserRegisterDTO;
 import com.libiao.lblearn1.domain.po.SysUser;
 import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
 import com.libiao.lblearn1.mapper.SysUserMapper;
@@ -35,7 +35,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AuthenticationManager authenticationManager;
+    /** 管理端认证管理器：字段名需与 bean 名 adminAuthenticationManager 一致，Spring 按参数名在多个同类型 bean 间消歧 */
+    private final AuthenticationManager adminAuthenticationManager;
 
     private final SysUserMapper sysUserMapper;
 
@@ -48,7 +49,7 @@ public class AuthServiceImpl implements AuthService {
         // ★核心一行：把用户名密码交给框架去校验
         // 它会走 UserDetailsService（查库） + PasswordEncoder（比对）
         // 校验失败抛 BadCredentialsException → 由 GlobalExceptionHandler 兜住
-        Authentication authentication = authenticationManager.authenticate(
+        Authentication authentication = adminAuthenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         sysUserLoginDTO.getUsername(), sysUserLoginDTO.getPassword())); // 这个构造器 = 未认证状态
 

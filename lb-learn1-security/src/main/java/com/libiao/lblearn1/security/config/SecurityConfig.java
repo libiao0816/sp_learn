@@ -1,9 +1,12 @@
 package com.libiao.lblearn1.security.config;
 
 import com.libiao.lblearn1.common.properties.AuthProperties;
+import com.libiao.lblearn1.security.clientUser.LoginClientUserDetailServiceImpl;
+import com.libiao.lblearn1.security.filter.ClientUserAuthenticationFilter;
 import com.libiao.lblearn1.security.filter.JwtAuthenticationFilter;
 import com.libiao.lblearn1.security.handler.AccessDeniedHandlerImpl;
 import com.libiao.lblearn1.security.handler.AuthenticationEntryPointImpl;
+import com.libiao.lblearn1.security.sysUser.SysUserDetailsServiceImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -11,10 +14,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -31,28 +37,28 @@ public class SecurityConfig {
 
     // 配置安全过滤链
     @Bean
-    public SecurityFilterChain adminFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPointImpl entryPoint,
+    public SecurityFilterChain adminUserFilterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter, AuthenticationEntryPointImpl entryPoint,
                                            AccessDeniedHandlerImpl deniedHandler)
             throws Exception {
         http
                 // 只对 /admin/** 开头的请求进行认证
                 .securityMatcher("/admin/**")
                 // 关掉 CSRF：前后端分离用 JWT，不靠 Session Cookie，不需要 CSRF 防护
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 // 关掉 Session：无状态认证，不需要 Session Cookie
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ★无状态
                 // 配合 STATELESS：无状态下不需要"未认证请求先缓存、登录后再回放"这套机制
-                .requestCache(rc -> rc.disable())
+                .requestCache(RequestCacheConfigurer::disable)
                 // 关掉默认的表单登录（不然还会跳内置登录页）
-                .formLogin(form -> form.disable())
+                .formLogin(AbstractHttpConfigurer::disable)
                 // 关掉 HTTP Basic（浏览器弹窗式认证）
-                .httpBasic(basic -> basic.disable())
+                .httpBasic(AbstractHttpConfigurer::disable)
                 // 关掉默认登出（我们要自己的 JSON 注销，第 9 章）
-                .logout(logout -> logout.disable())
+                .logout(AbstractHttpConfigurer::disable)
                 // 配置请求权限
                 .authorizeHttpRequests(auth -> auth
                         // ---------- 白名单：不需要登录就能访问 ----------
-                        .requestMatchers(authProperties.getWhiteList().toArray(String[]::new)).permitAll()
+                        .requestMatchers(authProperties.getAdminWhiteList().toArray(String[]::new)).permitAll()
                         // ★CORS 预检请求要放行
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() 
                          // 接口文档
@@ -81,6 +87,48 @@ public class SecurityConfig {
         return http.build();
     }
 
+    // C 端安全过滤链：参考 adminUserFilterChain，只对 /client/** 开头的请求生效
+    @Bean
+    public SecurityFilterChain clientUserFilterChain(HttpSecurity http, ClientUserAuthenticationFilter clientUserAuthenticationFilter,
+                                                    AuthenticationEntryPointImpl entryPoint,
+                                                    AccessDeniedHandlerImpl deniedHandler)
+            throws Exception {
+        http
+                // 只对 /client/** 开头的请求进行认证
+                .securityMatcher("/client/**")
+                // 关掉 CSRF：前后端分离用 JWT，不靠 Session Cookie，不需要 CSRF 防护
+                .csrf(AbstractHttpConfigurer::disable)
+                // 关掉 Session：无状态认证，不需要 Session Cookie
+                .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // ★无状态
+                // 配合 STATELESS：无状态下不需要"未认证请求先缓存、登录后再回放"这套机制
+                .requestCache(RequestCacheConfigurer::disable)
+                // 关掉默认的表单登录（不然还会跳内置登录页）
+                .formLogin(AbstractHttpConfigurer::disable)
+                // 关掉 HTTP Basic（浏览器弹窗式认证）
+                .httpBasic(AbstractHttpConfigurer::disable)
+                // 关掉默认登出（我们要自己的 JSON 注销）
+                .logout(AbstractHttpConfigurer::disable)
+                // 配置请求权限
+                .authorizeHttpRequests(auth -> auth
+                        // ---------- 白名单：不需要登录就能访问（如 /client/auth/login）
+                        .requestMatchers(authProperties.getClientWhiteList().toArray(String[]::new)).permitAll()
+                        // ★CORS 预检请求要放行
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        // 错误处理 ★强烈建议放行，否则出错时会变成 403/401
+                        .requestMatchers("/error").permitAll()
+
+                        // ---------- 兜底：其余全部要登录 ----------
+                        .anyRequest().authenticated())
+
+                // 配置异常处理
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(entryPoint)     // 401
+                        .accessDeniedHandler(deniedHandler))      // 403
+                // ★ 把 C 端 JWT 过滤器插在用户名密码过滤器之前
+                .addFilterBefore(clientUserAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
     // 配置密码编码器
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -90,12 +138,29 @@ public class SecurityConfig {
     }
 
     // 配置认证管理器
-    /** 暴露 AuthenticationManager，才能在 Controller 里注入使用 */
+    /**
+     * 管理端认证管理器：显式绑定 SysUserDetailsServiceImpl。
+     * <p>
+     * 容器里现在有两个 UserDetailsService（管理端 + 客户端），Spring Security 的
+     * InitializeUserDetailsBeanManagerConfigurer 发现多于一个时会直接跳过自动装配，
+     * 所以必须手动构建 DaoAuthenticationProvider，不能再依赖 AuthenticationConfiguration。
+     */
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config)
-            throws Exception {
-        // 因为我们已经提供了 UserDetailsService + PasswordEncoder 两个 Bean，
-        // Spring Boot 自动配置会组装好 DaoAuthenticationProvider，这里直接取就行。
-        return config.getAuthenticationManager();
+    public AuthenticationManager adminAuthenticationManager(SysUserDetailsServiceImpl sysUserDetailsService,
+                                                           PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(sysUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(provider);
+    }
+
+    /**
+     * C 端认证管理器：显式绑定 LoginClientUserDetailServiceImpl，与管理端互相隔离（各自查各自的用户表）。
+     */
+    @Bean
+    public AuthenticationManager clientUserAuthenticationManager(LoginClientUserDetailServiceImpl clientUserDetailsService,
+                                                                PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(clientUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(provider);
     }
 }

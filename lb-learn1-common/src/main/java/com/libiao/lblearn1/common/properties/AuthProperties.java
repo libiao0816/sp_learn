@@ -12,5 +12,9 @@ import java.util.List;
 @ConfigurationProperties(prefix = "lb")
 public class AuthProperties {
 
-    private List<String> whiteList;
+    /** 管理端（/admin/**）免登录白名单 */
+    private List<String> adminWhiteList;
+
+    /** 客户端（/client/**）免登录白名单 */
+    private List<String> clientWhiteList;
 }

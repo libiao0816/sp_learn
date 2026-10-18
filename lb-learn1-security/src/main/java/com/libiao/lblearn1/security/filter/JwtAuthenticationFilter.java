@@ -3,6 +3,7 @@ package com.libiao.lblearn1.security.filter;
 import com.libiao.lblearn1.common.properties.AuthProperties;
 import com.libiao.lblearn1.common.properties.JwtProperties;
 import com.libiao.lblearn1.common.model.TokenPayload;
+import com.libiao.lblearn1.common.utils.AuthTokenUtils;
 import com.libiao.lblearn1.common.utils.JwtUtil;
 import com.libiao.lblearn1.redis.TokenBlackService;
 import com.libiao.lblearn1.common.enums.TokenTypeEnum;
@@ -32,16 +33,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private static final String HEADER = "Authorization";
-
-    private static final String PREFIX = "Bearer ";
-
-    /** 认证失败原因：accessToken 已过期 */
-    public static final String REASON_EXPIRED = "EXPIRED";
-
-    /** 认证失败原因存放在 request 中的属性名，供 AuthenticationEntryPointImpl 读取 */
-    public static final String AUTH_FAIL_REASON_ATTR = "AUTH_FAIL_REASON";
-
     private final JwtProperties jwtProperties;
 
     private final TokenBlackService tokenBlackService;
@@ -51,7 +42,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain) throws ServletException, IOException {
-        String token = resolveToken(request);
+        String token = AuthTokenUtils.resolveToken(request);
 
         // 关键判断：只有「拿到 token」且「当前还没认证过」才处理
         // 第二个条件能避免覆盖前面过滤器已经放好的身份
@@ -59,7 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             try {
                 TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret());// 签名不对/过期 → 抛异常
 
-                List<String> whiteList = authProperties.getWhiteList();
+                List<String> whiteList = authProperties.getAdminWhiteList();
                 // 如果是 refresh token，且当前请求不是 /auth/refresh → 拒绝
                 String tokenType = payload.tokenType();
                 if (TokenTypeEnum.REFRESH_TOKEN.getType().equals(tokenType)
@@ -93,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             } catch (ExpiredJwtException e) {
                 // ★ accessToken 已过期：标记失败原因，交给 AuthenticationEntryPointImpl 返回 4011，
                 // 前端据此用 refreshToken 换新 token 并重发原请求
-                request.setAttribute(AUTH_FAIL_REASON_ATTR, REASON_EXPIRED);
+                request.setAttribute(AuthTokenUtils.AUTH_FAIL_REASON_ATTR, AuthTokenUtils.REASON_EXPIRED);
                 SecurityContextHolder.clearContext();
             } catch (Exception e) {
                 // 其他解析失败（篡改/签名不符/格式错）：清空上下文，不在这里返回错误，
@@ -103,13 +94,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response); // ★ 无论如何都要放行，交给链上后续过滤器
-    }
-
-    private String resolveToken(HttpServletRequest request) {
-        String header = request.getHeader(HEADER);
-        if (header != null && header.startsWith(PREFIX)) {
-            return header.substring(PREFIX.length());
-        }
-        return null;
     }
 }

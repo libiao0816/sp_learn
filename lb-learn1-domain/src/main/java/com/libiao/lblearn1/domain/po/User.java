@@ -21,6 +21,12 @@ public class User {
     @Schema(description = "用户内部唯一 ID，主键")
     private Long id;
 
+    @Schema(description = "账号")
+    private String account;
+
+    @Schema(description = "密码")
+    private String password;
+
     /** 对外用户编号，避免暴露自增 ID */
     @Schema(description = "对外用户编号，避免暴露自增 ID")
     private String userNo;

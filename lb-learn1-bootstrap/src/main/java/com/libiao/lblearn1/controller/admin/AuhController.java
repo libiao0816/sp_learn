@@ -7,8 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import com.libiao.lblearn1.common.result.Result;
-import com.libiao.lblearn1.domain.dto.sysuser.SysUserLoginDTO;
-import com.libiao.lblearn1.domain.dto.sysuser.SysUserRegisterDTO;
+import com.libiao.lblearn1.domain.dto.sysUser.SysUserLoginDTO;
+import com.libiao.lblearn1.domain.dto.sysUser.SysUserRegisterDTO;
 
 import java.util.Map;
 

@@ -2,8 +2,8 @@ package com.libiao.lblearn1.security.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;
-import com.libiao.lblearn1.security.filter.JwtAuthenticationFilter;
 import com.libiao.lblearn1.common.result.Result;
+import com.libiao.lblearn1.common.utils.AuthTokenUtils;
 import java.io.IOException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -28,9 +28,9 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
         // ★ 区分两种情况：
         //   - accessToken 过期 → 4011：前端可用 refreshToken 换新 token 自动续期
         //   - 未登录 / token 被篡改或已注销 → 401：前端只能跳转登录页
-        // 原因由 JwtAuthenticationFilter 在解析 token 失败时写入 request 属性传递过来
-        boolean expired = JwtAuthenticationFilter.REASON_EXPIRED
-                .equals(request.getAttribute(JwtAuthenticationFilter.AUTH_FAIL_REASON_ATTR));
+        // 原因由认证过滤器在解析 token 失败时写入 request 属性传递过来
+        boolean expired = AuthTokenUtils.REASON_EXPIRED
+                .equals(request.getAttribute(AuthTokenUtils.AUTH_FAIL_REASON_ATTR));
         ResultCodeEnum resultCode = expired
                 ? ResultCodeEnum.TOKEN_EXPIRED
                 : ResultCodeEnum.AUTHENTICATION_FAILED;

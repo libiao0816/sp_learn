@@ -33,6 +33,14 @@
             <artifactId>swagger-annotations-jakarta</artifactId>
         </dependency>
 
+        <!-- AuthTokenUtils 参数用到 jakarta.servlet 的 HttpServletRequest；
+             仅编译期需要，运行期由 Servlet 容器提供，故用 provided -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
