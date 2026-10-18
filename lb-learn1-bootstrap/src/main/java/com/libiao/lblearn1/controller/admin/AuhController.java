@@ -2,7 +2,7 @@ package com.libiao.lblearn1.controller.admin;
 
 import com.libiao.lblearn1.common.utils.JwtUtil;
 import com.libiao.lblearn1.domain.vo.sysuser.LoginSysUserVO;
-import com.libiao.lblearn1.service.admin.AuthService;
+import com.libiao.lblearn1.service.auth.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

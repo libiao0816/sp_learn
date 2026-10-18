@@ -1,9 +1,8 @@
-package com.libiao.lblearn1.service.admin.impl;
+package com.libiao.lblearn1.service.category;
 
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
 import com.libiao.lblearn1.domain.po.Category;
 import com.libiao.lblearn1.mapper.CategoryMapper;
-import com.libiao.lblearn1.service.admin.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +10,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category> implements CategoryService {
+public class CategoryService extends ServiceImpl<CategoryMapper,Category> {
 
     private final CategoryMapper categoryMapper;
 
-    @Override
     public List<Category> selectCategories() {
         return categoryMapper.selectList(null);
     }
 
-    @Override
     public int insertCategory(Category category) {
         int insert = 0;
         try {
@@ -31,7 +28,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category> im
         return insert;
     }
 
-    @Override
     public int updateCategory(Category category) {
         int update = 0;
         try {
@@ -42,7 +38,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper,Category> im
         return update;
     }
 
-    @Override
     public int deleteCategory(List<Long> idList) {
         int delete = 0;
         try {

@@ -3,7 +3,8 @@ package com.libiao.lblearn1.controller.user;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.user.ClientUserLoginDTO;
 import com.libiao.lblearn1.domain.vo.user.LoginClientUserVO;
-import com.libiao.lblearn1.service.user.ClientAuthService;
+import com.libiao.lblearn1.service.clientAuth.ClientAuthService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.service.admin.impl;
+package com.libiao.lblearn1.service.product;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
@@ -8,15 +8,13 @@ import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.domain.dto.product.ProductPageDTO;
 import com.libiao.lblearn1.domain.po.Product;
 import com.libiao.lblearn1.mapper.ProductMapper;
-import com.libiao.lblearn1.service.admin.ProductService;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
 @Service
-public class ProductServiceImpl extends ServiceImpl<ProductMapper,Product> implements ProductService {
+public class ProductService extends ServiceImpl<ProductMapper,Product> {
 
-    @Override
     public PageResult<Product> selectProductByPage(ProductPageDTO productPageDTO) {
         Page<Product> productPage = lambdaQuery()
                 .eq(Objects.nonNull(productPageDTO.getCategoryId()), Product::getCategoryId, productPageDTO.getCategoryId())
@@ -25,7 +23,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper,Product> imple
         return new PageResult<>(productPage.getTotal(), productPage.getRecords());
     }
 
-    @Override
     public Product selectDetailById(Long id) {
         Product productDetail = getById(id);
         if(Objects.isNull(productDetail)){

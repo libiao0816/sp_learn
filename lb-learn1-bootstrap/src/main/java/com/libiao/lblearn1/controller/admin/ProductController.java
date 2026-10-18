@@ -4,7 +4,7 @@ import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.product.ProductPageDTO;
 import com.libiao.lblearn1.domain.po.Product;
-import com.libiao.lblearn1.service.admin.ProductService;
+import com.libiao.lblearn1.service.product.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

@@ -11,7 +11,7 @@ import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.user.UserPageDTO;
 import com.libiao.lblearn1.domain.po.User;
-import com.libiao.lblearn1.service.admin.ManageUserService;
+import com.libiao.lblearn1.service.manageUser.ManageUserService;
 
 @RestController
 @RequestMapping("/admin/sysUser")

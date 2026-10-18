@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.service.admin.impl;
+package com.libiao.lblearn1.service.auth;
 
 import com.libiao.lblearn1.common.enums.ResultCodeEnum;
 import com.libiao.lblearn1.common.enums.SysUserErrorCodeEnum;
@@ -15,7 +15,6 @@ import com.libiao.lblearn1.redis.TokenBlackService;
 import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.security.sysUser.LoginSysUser;
 import com.libiao.lblearn1.security.sysUser.SysUserDetailsServiceImpl;
-import com.libiao.lblearn1.service.admin.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +28,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthService {
 
     private final JwtProperties jwtProperties;
 
@@ -44,7 +43,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final SysUserDetailsServiceImpl sysUserDetailsService;
 
-    @Override
     public LoginSysUserVO login(SysUserLoginDTO sysUserLoginDTO) {
         // ★核心一行：把用户名密码交给框架去校验
         // 它会走 UserDetailsService（查库） + PasswordEncoder（比对）
@@ -64,7 +62,6 @@ public class AuthServiceImpl implements AuthService {
         return LoginSysUserVO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
 
-    @Override
     public Integer register(SysUserRegisterDTO sysUserRegisterDTO) {
         SysUser sysUser = new SysUser();
         BeanUtils.copyProperties(sysUserRegisterDTO, sysUser);
@@ -79,14 +76,12 @@ public class AuthServiceImpl implements AuthService {
         return insert;
     }
 
-    @Override
     public Boolean logout(String token) {
         TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret());
         tokenBlackService.addBlackList(payload.jti(), payload.expirationMillis());
         return true;
     }
 
-    @Override
     public String refreshToken(String refreshToken) {
         TokenPayload payload = JwtUtil.parseToken(refreshToken, jwtProperties.getSecret());
         String tokenType = TokenTypeEnum.REFRESH_TOKEN.getType();
