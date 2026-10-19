@@ -8,9 +8,9 @@ import lombok.Data;
 @Schema(description = "测试分页参数")
 public class ProductPageDTO extends PageQuery {
 
-    @Schema(description = "分类id")
+    @Schema(description = "分类id2")
     private String categoryId;
 
-    @Schema(description = "商品名称")
+    @Schema(description = "商品名称2")
     private String productName;
 }
