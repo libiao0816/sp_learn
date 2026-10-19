@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.service.admin.impl;
+package com.libiao.lblearn1.service.cart;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
@@ -9,7 +9,6 @@ import com.libiao.lblearn1.domain.po.Cart;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
 import com.libiao.lblearn1.mapper.CartMapper;
 import com.libiao.lblearn1.security.sysUser.LoginSysUser;
-import com.libiao.lblearn1.service.admin.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -21,11 +20,10 @@ import java.util.List;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements CartService {
+public class CartService extends ServiceImpl<CartMapper, Cart> {
 
     private final CartMapper cartMapper;
 
-    @Override
     public int addCart(CartAddDTO cartAddDTO) {
         int result = 0;
         try {
@@ -38,7 +36,6 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         return result;
     }
 
-    @Override
     public int removeCart(List<Long> ids) {
         int result = 0;
         try {
@@ -49,7 +46,6 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements Ca
         return result;
     }
 
-    @Override
     public PageResult<CartPageVO> getCartPage(CartPageDTO cartPageDTO) {
         LoginSysUser loginSysUser = (LoginSysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

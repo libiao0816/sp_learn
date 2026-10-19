@@ -4,7 +4,7 @@ import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.order.OrderPageDTO;
 import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
-import com.libiao.lblearn1.service.admin.OrderService;
+import com.libiao.lblearn1.service.order.OrderService;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.libiao.lblearn1.service.admin.impl;
+package com.libiao.lblearn1.service.order;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
@@ -11,8 +11,8 @@ import com.libiao.lblearn1.domain.po.OrderItem;
 import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
 import com.libiao.lblearn1.mapper.OrderMapper;
 import com.libiao.lblearn1.security.sysUser.LoginSysUser;
-import com.libiao.lblearn1.service.admin.OrderItemService;
-import com.libiao.lblearn1.service.admin.OrderService;
+import com.libiao.lblearn1.service.orderItem.OrderItemService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,11 +26,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+public class OrderService extends ServiceImpl<OrderMapper, Order> {
 
     private final OrderItemService orderItemService;
 
-    @Override
     public Boolean deleteById(Long id) {
         boolean result = removeById(id);
         if(!result){
@@ -39,7 +38,6 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         return Boolean.TRUE;
     }
 
-    @Override
     public PageResult<OrderPageVO> selectPage(OrderPageDTO orderPageDTO) {
         LoginSysUser loginSysUser = (LoginSysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 

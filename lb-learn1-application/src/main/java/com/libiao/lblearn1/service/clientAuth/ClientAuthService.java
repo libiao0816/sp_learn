@@ -1,12 +1,12 @@
-package com.libiao.lblearn1.service.user.impl;
+package com.libiao.lblearn1.service.clientAuth;
 
 import com.libiao.lblearn1.common.properties.JwtProperties;
 import com.libiao.lblearn1.common.utils.JwtUtil;
 import com.libiao.lblearn1.domain.dto.user.ClientUserLoginDTO;
 import com.libiao.lblearn1.domain.vo.user.LoginClientUserVO;
 import com.libiao.lblearn1.security.clientUser.LoginClientUser;
-import com.libiao.lblearn1.service.user.ClientAuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,14 +16,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ClientAuthServiceImpl implements ClientAuthService {
+public class ClientAuthService {
 
     private final JwtProperties jwtProperties;
 
-    /** C 端认证管理器：字段名需与 bean 名 clientUserAuthenticationManager 一致，Spring 按参数名在多个同类型 bean 间消歧 */
+    /** C 端认证管理器：@Qualifier 会在编译期被 Lombok 复制到构造器参数上，显式钉死注入目标 */
+    @Qualifier("clientUserAuthenticationManager")
     private final AuthenticationManager clientUserAuthenticationManager;
 
-    @Override
     public LoginClientUserVO login(ClientUserLoginDTO clientUserLoginDTO) {
         // ★核心一行：把账号密码交给框架去校验
         // 它会走 LoginClientUserDetailServiceImpl（查 user 表） + PasswordEncoder（比对）

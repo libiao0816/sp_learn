@@ -5,7 +5,7 @@ import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.cart.CartAddDTO;
 import com.libiao.lblearn1.domain.dto.cart.CartPageDTO;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
-import com.libiao.lblearn1.service.admin.CartService;
+import com.libiao.lblearn1.service.cart.CartService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
