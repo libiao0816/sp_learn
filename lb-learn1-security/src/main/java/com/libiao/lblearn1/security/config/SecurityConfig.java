@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
@@ -144,8 +145,13 @@ public class SecurityConfig {
      * 容器里现在有两个 UserDetailsService（管理端 + 客户端），Spring Security 的
      * InitializeUserDetailsBeanManagerConfigurer 发现多于一个时会直接跳过自动装配，
      * 所以必须手动构建 DaoAuthenticationProvider，不能再依赖 AuthenticationConfiguration。
+     * <p>
+     * 加 @Primary 是为了让 Spring Security 内部 HttpSecurityConfiguration.httpSecurity()
+     * 工厂方法在容器里有两个 AuthenticationManager 时能明确选这个，避免 Bean 冲突；
+     * 业务层 AuthService / ClientAuthService 通过字段名匹配消歧，不受 @Primary 影响。
      */
-    @Bean
+    @Bean("adminAuthenticationManager")
+    @Primary
     public AuthenticationManager adminAuthenticationManager(SysUserDetailsServiceImpl sysUserDetailsService,
                                                            PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(sysUserDetailsService);
@@ -156,7 +162,7 @@ public class SecurityConfig {
     /**
      * C 端认证管理器：显式绑定 LoginClientUserDetailServiceImpl，与管理端互相隔离（各自查各自的用户表）。
      */
-    @Bean
+    @Bean("clientUserAuthenticationManager")
     public AuthenticationManager clientUserAuthenticationManager(LoginClientUserDetailServiceImpl clientUserDetailsService,
                                                                 PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(clientUserDetailsService);

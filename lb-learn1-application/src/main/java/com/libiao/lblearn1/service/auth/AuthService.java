@@ -17,6 +17,7 @@ import com.libiao.lblearn1.security.sysUser.LoginSysUser;
 import com.libiao.lblearn1.security.sysUser.SysUserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -34,7 +35,8 @@ public class AuthService {
 
     private final PasswordEncoder passwordEncoder;
 
-    /** 管理端认证管理器：字段名需与 bean 名 adminAuthenticationManager 一致，Spring 按参数名在多个同类型 bean 间消歧 */
+    /** 管理端认证管理器：@Qualifier 会在编译期被 Lombok 复制到构造器参数上，显式钉死注入目标 */
+    @Qualifier("adminAuthenticationManager")
     private final AuthenticationManager adminAuthenticationManager;
 
     private final SysUserMapper sysUserMapper;

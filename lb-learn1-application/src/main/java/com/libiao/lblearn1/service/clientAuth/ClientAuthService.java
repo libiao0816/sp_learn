@@ -6,6 +6,7 @@ import com.libiao.lblearn1.domain.dto.user.ClientUserLoginDTO;
 import com.libiao.lblearn1.domain.vo.user.LoginClientUserVO;
 import com.libiao.lblearn1.security.clientUser.LoginClientUser;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,7 +20,8 @@ public class ClientAuthService {
 
     private final JwtProperties jwtProperties;
 
-    /** C 端认证管理器：字段名需与 bean 名 clientUserAuthenticationManager 一致，Spring 按参数名在多个同类型 bean 间消歧 */
+    /** C 端认证管理器：@Qualifier 会在编译期被 Lombok 复制到构造器参数上，显式钉死注入目标 */
+    @Qualifier("clientUserAuthenticationManager")
     private final AuthenticationManager clientUserAuthenticationManager;
 
     public LoginClientUserVO login(ClientUserLoginDTO clientUserLoginDTO) {
