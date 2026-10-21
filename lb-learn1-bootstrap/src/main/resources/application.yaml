@@ -89,3 +89,4 @@ lb:
   # 客户端（/client/**）免登录白名单
   client-white-list:
     - "/client/auth/login"
+    - "/client/auth/register"

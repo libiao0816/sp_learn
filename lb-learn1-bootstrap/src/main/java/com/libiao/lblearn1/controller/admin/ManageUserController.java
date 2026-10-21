@@ -11,18 +11,18 @@ import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.user.UserPageDTO;
 import com.libiao.lblearn1.domain.po.User;
-import com.libiao.lblearn1.service.manageUser.ManageUserService;
+import com.libiao.lblearn1.service.clientUser.ClientUserService;
 
 @RestController
-@RequestMapping("/admin/sysUser")
+@RequestMapping("/admin/manageUser")
 @RequiredArgsConstructor
 public class ManageUserController {
 
-    private final ManageUserService manageUserService;
+    private final ClientUserService clientUserService;
 
     @GetMapping("/page")
     @PreAuthorize("hasRole('admin')")
     public Result<PageResult<User>> getUserPage(UserPageDTO userPageDTO) {
-        return Result.Success(manageUserService.getUserPage(userPageDTO));
+        return Result.Success(clientUserService.getUserPage(userPageDTO));
     }
 }

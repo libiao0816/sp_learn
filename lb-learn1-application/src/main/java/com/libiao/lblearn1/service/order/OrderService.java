@@ -10,12 +10,11 @@ import com.libiao.lblearn1.domain.po.Order;
 import com.libiao.lblearn1.domain.po.OrderItem;
 import com.libiao.lblearn1.domain.vo.order.OrderPageVO;
 import com.libiao.lblearn1.mapper.OrderMapper;
-import com.libiao.lblearn1.security.sysUser.LoginSysUser;
+import com.libiao.lblearn1.security.util.LoginUserUtils;
 import com.libiao.lblearn1.service.orderItem.OrderItemService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -39,11 +38,11 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
     }
 
     public PageResult<OrderPageVO> selectPage(OrderPageDTO orderPageDTO) {
-        LoginSysUser loginSysUser = (LoginSysUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = LoginUserUtils.getCurrentUserId();
 
         Page<Order> orderPage = lambdaQuery()
                 .select(Order::getId)
-                .eq(Order::getUserId, loginSysUser.getId())
+                .eq(Order::getUserId, userId)
                 .eq(Objects.nonNull(orderPageDTO.getOrderId()), Order::getId, orderPageDTO.getOrderId())
                 .eq(Objects.nonNull(orderPageDTO.getStatus()), Order::getStatus, orderPageDTO.getStatus())
                 .orderBy(orderPageDTO.getCreateTimeOrderBy() != null,
@@ -65,5 +64,21 @@ public class OrderService extends ServiceImpl<OrderMapper, Order> {
         }).collect(Collectors.toList());
 
         return new PageResult<OrderPageVO>(orderPage.getTotal(), voList);
+    }
+
+    public OrderPageVO selectDetailById(Long id) {
+        Long userId = LoginUserUtils.getCurrentUserId();
+        // 只允许查自己的订单：id 相同但 userId 不匹配时 one() 返回 null
+        Order order = lambdaQuery()
+                .eq(Order::getId, id)
+                .eq(Order::getUserId, userId)
+                .one();
+        if (Objects.isNull(order)) {
+            throw new BusinessException(OrderCodeEnum.ORDER_NOT_FOUND.getCode(), OrderCodeEnum.ORDER_NOT_FOUND.getMsg());
+        }
+        OrderPageVO orderPageVO = new OrderPageVO();
+        BeanUtils.copyProperties(order, orderPageVO);
+        orderPageVO.setOrderItems(orderItemService.getOrderItemsByOrderIds(List.of(order.getId())));
+        return orderPageVO;
     }
 }
