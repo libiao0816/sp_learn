@@ -48,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 第二个条件能避免覆盖前面过滤器已经放好的身份
         if (StringUtils.isNotBlank(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret());// 签名不对/过期 → 抛异常
+                TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getAdmin().getSecret());// 签名不对/过期 → 抛异常
 
                 List<String> whiteList = authProperties.getAdminWhiteList();
                 // 如果是 refresh token，且当前请求不是 /auth/refresh → 拒绝

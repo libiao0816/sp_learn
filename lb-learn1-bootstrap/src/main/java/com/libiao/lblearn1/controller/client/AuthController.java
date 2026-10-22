@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/client/auth")
 @RequiredArgsConstructor
@@ -30,5 +32,11 @@ public class AuthController {
     public Result<Integer> register(@Valid @RequestBody ClientUserRegisterDTO clientUserRegisterDTO) {
         Integer insert = clientAuthService.register(clientUserRegisterDTO);
         return Result.Success(insert);
+    }
+
+    @PostMapping("/refresh")
+    public Result<String> refresh(@RequestBody Map<String, String> map) {
+        String accessToken = clientAuthService.refreshToken(map.get("refreshToken"));
+        return Result.Success(accessToken);
     }
 }

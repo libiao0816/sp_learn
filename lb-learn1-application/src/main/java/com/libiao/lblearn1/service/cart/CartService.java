@@ -3,9 +3,12 @@ package com.libiao.lblearn1.service.cart;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.spring.service.impl.ServiceImpl;
+import com.libiao.lblearn1.common.enums.CartCodeEnum;
+import com.libiao.lblearn1.common.exception.BusinessException;
 import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.domain.dto.cart.CartAddDTO;
 import com.libiao.lblearn1.domain.dto.cart.CartPageDTO;
+import com.libiao.lblearn1.domain.dto.cart.CartUpdateQuantityDTO;
 import com.libiao.lblearn1.domain.po.Cart;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
 import com.libiao.lblearn1.mapper.CartMapper;
@@ -55,5 +58,17 @@ public class CartService extends ServiceImpl<CartMapper, Cart> {
                 LoginUserUtils.getCurrentUserId()
         );
         return new PageResult<>(page.getTotal(), page.getRecords());
+    }
+
+    public int updateCartQuantity(CartUpdateQuantityDTO cartUpdateQuantityDTO) {
+        Cart cart = new Cart();
+        // DTO 的购物车 id 字段名是 cartId，与实体 id 不同名，BeanUtils 不会自动映射，需手动赋值
+        cart.setId(cartUpdateQuantityDTO.getCartId() == null ? null : cartUpdateQuantityDTO.getCartId().longValue());
+        cart.setQuantity(cartUpdateQuantityDTO.getQuantity());
+        int update = cartMapper.updateById(cart);
+        if (update > 0) {
+            return update;
+        }
+        throw new BusinessException(CartCodeEnum.UPDATE_FAIL.getCode(), CartCodeEnum.UPDATE_FAIL.getMsg());
     }
 }

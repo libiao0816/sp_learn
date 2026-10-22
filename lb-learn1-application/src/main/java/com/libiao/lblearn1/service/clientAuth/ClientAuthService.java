@@ -1,8 +1,11 @@
 package com.libiao.lblearn1.service.clientAuth;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.libiao.lblearn1.common.enums.ResultCodeEnum;
 import com.libiao.lblearn1.common.enums.SysUserErrorCodeEnum;
+import com.libiao.lblearn1.common.enums.TokenTypeEnum;
 import com.libiao.lblearn1.common.exception.BusinessException;
+import com.libiao.lblearn1.common.model.TokenPayload;
 import com.libiao.lblearn1.common.properties.JwtProperties;
 import com.libiao.lblearn1.common.utils.JwtUtil;
 import com.libiao.lblearn1.domain.dto.user.ClientUserLoginDTO;
@@ -75,10 +78,24 @@ public class ClientAuthService {
         List<String> authList = List.of();
 
         String accessToken = JwtUtil.createAccessToken(loginClientUser.getId(), loginClientUser.getUsername(),
-                jwtProperties.getSecret(), jwtProperties.getAccessTtl(), authList);
+                jwtProperties.getClient().getSecret(), jwtProperties.getClient().getAccessTtl(), authList);
         String refreshToken = JwtUtil.createRefreshToken(loginClientUser.getId(), loginClientUser.getUsername(),
-                jwtProperties.getSecret(), jwtProperties.getRefreshTtl(), authList);
+                jwtProperties.getClient().getSecret(), jwtProperties.getClient().getRefreshTtl(), authList);
 
         return LoginClientUserVO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+    }
+
+    /**
+     * 用 refreshToken 换新的 accessToken
+     * C 端不涉及角色权限，直接沿用 token 里的身份，无需重查库刷新权限
+     */
+    public String refreshToken(String refreshToken) {
+        TokenPayload payload = JwtUtil.parseToken(refreshToken, jwtProperties.getClient().getSecret());
+        if (!TokenTypeEnum.REFRESH_TOKEN.getType().equals(payload.tokenType())) {
+            throw new BusinessException(ResultCodeEnum.AUTHENTICATION_FAILED.getCode(),
+                    ResultCodeEnum.AUTHENTICATION_FAILED.getMsg());
+        }
+        return JwtUtil.createAccessToken(payload.userId(), payload.username(), jwtProperties.getClient().getSecret(),
+                jwtProperties.getClient().getAccessTtl(), List.of());
     }
 }

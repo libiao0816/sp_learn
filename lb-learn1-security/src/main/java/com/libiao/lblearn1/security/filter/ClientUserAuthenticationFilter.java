@@ -45,7 +45,7 @@ public class ClientUserAuthenticationFilter extends OncePerRequestFilter {
         // 只有「拿到 token」且「当前还没认证过」才处理，避免覆盖前面过滤器已放好的身份
         if (StringUtils.isNotBlank(token) && SecurityContextHolder.getContext().getAuthentication() == null) {
             try {
-                TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret()); // 签名不对/过期 → 抛异常
+                TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getClient().getSecret()); // 签名不对/过期 → 抛异常
 
                 // 如果是 refresh token，且当前请求不是刷新接口 → 拒绝（放行后由入口点返回 401）
                 String tokenType = payload.tokenType();

@@ -2,13 +2,19 @@ package com.libiao.lblearn1.domain.po;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
 @TableName("t_cart")
 @Schema(description = "购物车实体")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cart {
 
     @Schema(description = "购物车id")

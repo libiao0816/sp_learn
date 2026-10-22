@@ -57,9 +57,9 @@ public class AuthService {
         List<String> authList = loginSysUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
         String accessToken = JwtUtil.createAccessToken(loginSysUser.getId(), loginSysUser.getUsername(),
-                jwtProperties.getSecret(), jwtProperties.getAccessTtl(), authList);
+                jwtProperties.getAdmin().getSecret(), jwtProperties.getAdmin().getAccessTtl(), authList);
         String refreshToken = JwtUtil.createRefreshToken(loginSysUser.getId(), loginSysUser.getUsername(),
-                jwtProperties.getSecret(), jwtProperties.getRefreshTtl(), authList);
+                jwtProperties.getAdmin().getSecret(), jwtProperties.getAdmin().getRefreshTtl(), authList);
 
         return LoginSysUserVO.builder().accessToken(accessToken).refreshToken(refreshToken).build();
     }
@@ -79,13 +79,13 @@ public class AuthService {
     }
 
     public Boolean logout(String token) {
-        TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getSecret());
+        TokenPayload payload = JwtUtil.parseToken(token, jwtProperties.getAdmin().getSecret());
         tokenBlackService.addBlackList(payload.jti(), payload.expirationMillis());
         return true;
     }
 
     public String refreshToken(String refreshToken) {
-        TokenPayload payload = JwtUtil.parseToken(refreshToken, jwtProperties.getSecret());
+        TokenPayload payload = JwtUtil.parseToken(refreshToken, jwtProperties.getAdmin().getSecret());
         String tokenType = TokenTypeEnum.REFRESH_TOKEN.getType();
         if (!tokenType.equals(payload.tokenType())) {
             throw new BusinessException(ResultCodeEnum.AUTHENTICATION_FAILED.getCode(),
@@ -94,7 +94,7 @@ public class AuthService {
         // 重新查一次权限，顺便让权限变更在刷新时生效
         LoginSysUser loginSysUser = (LoginSysUser) sysUserDetailsService.loadUserByUsername(payload.username());
         List<String> authList = loginSysUser.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        return JwtUtil.createAccessToken(loginSysUser.getId(), loginSysUser.getUsername(), jwtProperties.getSecret(),
-                jwtProperties.getAccessTtl(), authList);
+        return JwtUtil.createAccessToken(loginSysUser.getId(), loginSysUser.getUsername(), jwtProperties.getAdmin().getSecret(),
+                jwtProperties.getAdmin().getAccessTtl(), authList);
     }
 }

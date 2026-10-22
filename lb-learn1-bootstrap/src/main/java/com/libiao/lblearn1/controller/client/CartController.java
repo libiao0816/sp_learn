@@ -4,6 +4,7 @@ import com.libiao.lblearn1.common.result.PageResult;
 import com.libiao.lblearn1.common.result.Result;
 import com.libiao.lblearn1.domain.dto.cart.CartAddDTO;
 import com.libiao.lblearn1.domain.dto.cart.CartPageDTO;
+import com.libiao.lblearn1.domain.dto.cart.CartUpdateQuantityDTO;
 import com.libiao.lblearn1.domain.vo.cart.CartPageVO;
 import com.libiao.lblearn1.service.cart.CartService;
 
@@ -42,5 +43,11 @@ public class CartController {
     @Operation(summary = "删除购物车", description = "按 id 批量删除当前登录用户的购物车")
     public Result<Integer> removeCart(@RequestBody List<Long> ids) {
         return Result.Success(cartService.removeCart(ids));
+    }
+
+    @PostMapping("/update")
+    @Operation(summary = "修改购物车数量", description = "按 id 修改购物车数量")
+    public Result<Integer> removeCart(@RequestBody CartUpdateQuantityDTO cartUpdateQuantityDTO) {
+        return Result.Success(cartService.updateCartQuantity(cartUpdateQuantityDTO));
     }
 }

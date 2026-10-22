@@ -12,7 +12,7 @@ import java.util.Objects;
 public class TokenBlackService {
 
     /** Redis Key 前缀: lb:{模块}:{业务} , 后续拼接唯一标识 jti */
-    private static final String KEY_PREFIX = "lb:user:black:";
+    public static final String KEY_PREFIX = "lb:user:black:";
 
     private final RedisTemplate<String, Object> redisTemplate;
 
